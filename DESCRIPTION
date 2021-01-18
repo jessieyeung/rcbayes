@@ -5,7 +5,7 @@ Authors@R: c(
     person("Jessie", "Yeung", role = c("aut", "cre"), email = "jessieyeung1@gmail.com",),
     person("Monica", "Alexander", role = "aut", comment = c(ORCID = "0000-0002-8135-3435")))
 Description: A collection of functions to estimate Rogers-Castro migration age schedules using Stan. 
-License: file LICENSE
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
