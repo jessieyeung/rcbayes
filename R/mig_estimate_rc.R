@@ -1,7 +1,7 @@
 #' Estimate Rogers-Castro migration age schedule
 
-#' @description Given a set of ages and observed age-specific migration rates, estimate the parameters of a Roger-Castro model migration schedule.
-#' Choose between a 7,9,11 or 13 parameter model.
+#' @description Given a set of ages and observed age-specific net migrants, estimate the parameters of a Roger-Castro model migration schedule.
+#' Choose between a 7, 9, 11 or 13 parameter model.
 
 #' @param ages numeric. A vector of integers for ages.
 #' @param net_mig numeric. A vector of integers for observed age-specific net migrants.
@@ -23,7 +23,7 @@
 #' @importFrom rstan extract
 #' @export
 #' @examples
-#' # define ages and migration rates
+#' # define ages, net migrants, and population
 #' ages <- 0:80
 #'net_mig <- c(202,215,167,188,206,189,164,
 #'             158,197,185,176,173,167,198,
@@ -57,10 +57,13 @@
 #' # fit the model
 #'
 #' res <- mig_estimate_rc(ages, net_mig, pop,
-#' pre_working_age = TRUE,
-#' working_age = TRUE,
-#' retirement = TRUE,
-#' post_retirement = FALSE)
+#'                        pre_working_age = TRUE,
+#'                        working_age = TRUE,
+#'                        retirement = TRUE,
+#'                        post_retirement = FALSE,
+#'                        #optional inputs into stan
+#'                        control = list(adapt_delta = 0.95, max_treedepth = 10)
+#'                        )
 #' \dontrun{
 #' # plot the results and data
 #' plot(ages, net_mig/pop, ylab = "migration rate", xlab = "age")

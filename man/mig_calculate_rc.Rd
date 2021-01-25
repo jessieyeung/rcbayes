@@ -2,8 +2,7 @@
 % Please edit documentation in R/mig_calculate_rc.R
 \name{mig_calculate_rc}
 \alias{mig_calculate_rc}
-\title{Calculate Rogers-Castro migration age schedule
-Author: MJA}
+\title{Calculate Rogers-Castro migration age schedule}
 \usage{
 mig_calculate_rc(ages, pars)
 }

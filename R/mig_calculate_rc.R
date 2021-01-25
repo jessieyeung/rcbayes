@@ -1,9 +1,6 @@
 #' Calculate Rogers-Castro migration age schedule
-#' Author: MJA
-###############################################################################
-
 #' @description Given a set of ages and parameters, calculate the migration age schedule based on the Rogers and Castro formula.
-#' Choose between a 7,9,11 or 13 parameter model.
+#' Choose between a 7, 9, 11 or 13 parameter model.
 #'
 #' @param ages numeric. A vector of ages for migration rates to be calculated.
 #' @param pars numeric. A named list of parameters. See below for details.
