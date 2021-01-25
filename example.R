@@ -35,9 +35,9 @@ res <- mig_estimate_rc(ages, net_mig, pop,
                        pre_working_age = TRUE,
                        working_age = TRUE,
                        retirement = TRUE,
-                       post_retirement = TRUE,
-                       control = list(adapt_delta = 0.95, max_treedepth = 10),
-                       init = init_rc(ages, y, pop,
+                       post_retirement = TRUE, iter=100,
+                       #control = list(adapt_delta = 0.95, max_treedepth = 10),
+                       init = init_rc(ages, net_mig, pop,
                                              pre_working_age=TRUE, working_age=TRUE,
                                              retirement=TRUE, post_retirement=TRUE))
 

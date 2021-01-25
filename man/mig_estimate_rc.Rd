@@ -34,7 +34,7 @@ mig_estimate_rc(
 }
 \description{
 Given a set of ages and observed age-specific net migrants, estimate the parameters of a Roger-Castro model migration schedule.
-Choose between a 7,9,11 or 13 parameter model.
+Choose between a 7, 9, 11 or 13 parameter model.
 }
 \examples{
 # define ages, net migrants, and population

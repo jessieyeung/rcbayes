@@ -218,18 +218,8 @@ c ~ normal(min(to_vector(y) ./ pop),0.1);
     dplyr::rename("variable" = !!sym(".variable")) %>%
     dplyr::mutate("variable" = gsub("\\[1\\]", "", "variable"))
 
-  return(list(pars_df = pars_df, fit_df = dfit))
+  check_converge <- rstan::summary(rc_fit)$summary[1:length(parnames),c("mean", "se_mean", "n_eff", "Rhat")]
 
-  # for sake of R CMD checks
-  # .value <- .variable <- NULL
-  # dt <- as.data.table(pars_df)
-  # dt <-
-  #   dt[, list(median = median( .value ),
-  #             lower = quantile(.value, 0.025),
-  #             upper = quantile(.value, 0.975)),
-  #      by = list( .variable )] %>%
-  #   setnames(".variable","variable") %>%
-  #   as.tibble()
+  return(list(pars_df = pars_df, fit_df = dfit, check_converge = check_converge))
 
-  return(list(pars_df = pars_df, fit_df = dfit))
 }

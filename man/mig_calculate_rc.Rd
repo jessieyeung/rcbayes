@@ -13,7 +13,7 @@ mig_calculate_rc(ages, pars)
 }
 \description{
 Given a set of ages and parameters, calculate the migration age schedule based on the Rogers and Castro formula.
-Choose between a 7,9,11 or 13 parameter model.
+Choose between a 7, 9, 11 or 13 parameter model.
 }
 \details{
 In the full 13 parameter model, the migration rate at age x, \eqn{m(x)} is defined as
