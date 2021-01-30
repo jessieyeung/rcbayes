@@ -24,52 +24,38 @@ Alexander](https://www.monicaalexander.com/) and [Tim
 Riffe](https://github.com/timriffe/). This work is licensed under the
 MIT License.
 
-## Installation
+## Getting Started and Installation
 
-You can install the released version of rcbayes from
-[CRAN](https://CRAN.R-project.org) with:
+To get started with `rcbayes` we recommend taking a look at the examples
+in the package and function documentation.
 
-``` r
-install.packages("rcbayes")
-```
-
-And the development version from [GitHub](https://github.com/) with:
+You can load the `rcbayes` package as follows:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("jessieyeung/rcbayes")
+library(devtools)
+
+install_github("jessieyeung/rcbayes")
 ```
 
-## Example
+Note that this package requires `rstan`. If you have issues installing
+`rstan` additional information is avaliable
+[here](https://github.com/stan-dev/rstan/wiki), as well as from a
+general Google search.
 
-This is a basic example which shows you how to solve a common problem:
+## Citation
+
+To cite `rcbayes` in publications, please use:
+
+Alexander M, Yeung J and Riffe T. (2021) rcbayes: An R package of tools
+for Bayesian Rogers-Castro Migratio Age Schedules URL:
+<https://github.com/jessieyeung/rcbayes/>.
 
 ``` r
-library(rcbayes)
-## basic example code
+@Misc{rcbayes,
+  Title     = {rcbayes: {A}n {R} package for Bayesian Rogers-Castro Migration Age Schedules},
+  Author    = {Alexander, M and Yeung, J and Riffe, T},
+  Year      = {2021},
+  note      = {URL:~\url{https://github.com/jessieyeung/rcbayes/}}
+}
 ```
-
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
-
-``` r
-summary(cars)
-```
-
-    ##      speed           dist       
-    ##  Min.   : 4.0   Min.   :  2.00  
-    ##  1st Qu.:12.0   1st Qu.: 26.00  
-    ##  Median :15.0   Median : 36.00  
-    ##  Mean   :15.4   Mean   : 42.98  
-    ##  3rd Qu.:19.0   3rd Qu.: 56.00  
-    ##  Max.   :25.0   Max.   :120.00
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date.
-
-You can also embed plots, for example:
-
-![](README_files/figure-gfm/pressure-1.png)<!-- -->
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub\!

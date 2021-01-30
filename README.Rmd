@@ -11,41 +11,35 @@ The `rcbayes` package is an R package that contains functions to calculate and e
 
 This project, including both the `rcbayes` and `DemoTools` packages, is commissioned by the [UN Population Division](http://www.un.org/en/development/desa/population/) and financed by the [Bill and Melinda Gates Foundation](https://www.gatesfoundation.org/) as part of the [Making Family Planning Count](http://www.un.org/en/development/desa/population/projects/making-family-planning-count/index.shtml) project. `rcbayes` was created in collaboration with [Monica Alexander](https://www.monicaalexander.com/) and [Tim Riffe](https://github.com/timriffe/). This work is licensed under the MIT License. 
 
-## Installation
+## Getting Started and Installation
 
-You can install the released version of rcbayes from [CRAN](https://CRAN.R-project.org) with:
+To get started with `rcbayes` we recommend taking a look at the examples in the package and function documentation.
 
-``` r
-install.packages("rcbayes")
-```
-
-And the development version from [GitHub](https://github.com/) with:
-
-``` r
+You can load the `rcbayes` package as follows: 
+```{r, eval=FALSE}
 # install.packages("devtools")
-devtools::install_github("jessieyeung/rcbayes")
-```
-## Example
+library(devtools)
 
-This is a basic example which shows you how to solve a common problem:
-
-```{r example}
-library(rcbayes)
-## basic example code
+install_github("jessieyeung/rcbayes")
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+Note that this package requires `rstan`. If you have issues installing `rstan` additional information is avaliable [here](https://github.com/stan-dev/rstan/wiki), as well as from a general Google search. 
 
-```{r cars}
-summary(cars)
+## Citation
+To cite `rcbayes` in publications, please use: 
+
+Alexander M, Yeung J and Riffe T. (2021) rcbayes: An R package of tools for Bayesian Rogers-Castro Migratio Age Schedules URL: https://github.com/jessieyeung/rcbayes/.
+
+```{r, eval=FALSE}
+@Misc{rcbayes,
+  Title		= {rcbayes: {A}n {R} package for Bayesian Rogers-Castro Migration Age Schedules},
+  Author    = {Alexander, M and Yeung, J and Riffe, T},
+  Year      = {2021},
+  note		= {URL:~\url{https://github.com/jessieyeung/rcbayes/}}
+}
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date.
 
-You can also embed plots, for example:
 
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub!
+
