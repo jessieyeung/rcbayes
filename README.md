@@ -7,10 +7,10 @@ The `rcbayes` package is an R package that contains functions to
 calculate and estiamte Rogers-Castro migration age schedules in a
 Bayesian framework. It is in active development.
 
-`rcbayes` is a spin-off package that is called on by the `DemoTools`
-package, but can also be used as a stand-alone package. `DemoTools` is
-an R package that contains simple functions often used in demographic
-analysis.
+`rcbayes` is a spin-off package that is called on by
+[`DemoTools`](https://github.com/timriffe/DemoTools/), but can also be
+used as a stand-alone package. `DemoTools` is an R package that contains
+simple functions often used in demographic analysis.
 
 This project, including both the `rcbayes` and `DemoTools` packages, is
 commissioned by the [UN Population
@@ -19,7 +19,10 @@ financed by the [Bill and Melinda Gates
 Foundation](https://www.gatesfoundation.org/) as part of the [Making
 Family Planning
 Count](http://www.un.org/en/development/desa/population/projects/making-family-planning-count/index.shtml)
-project. This work is licensed under the MIT License.
+project. `rcbayes` was created in collaboration with [Monica
+Alexander](https://www.monicaalexander.com/) and [Tim
+Riffe](https://github.com/timriffe/). This work is licensed under the
+MIT License.
 
 ## Installation
 
