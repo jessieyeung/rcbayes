@@ -36,6 +36,7 @@ You can load the `rcbayes` package as follows:
 library(devtools)
 
 install_github("jessieyeung/rcbayes")
+library(rcbayes)
 ```
 
 Note that this package requires `rstan`. If you have issues installing
@@ -51,11 +52,9 @@ Alexander M, Yeung J and Riffe T. (2021) rcbayes: An R package of tools
 for Bayesian Rogers-Castro Migratio Age Schedules URL:
 <https://github.com/jessieyeung/rcbayes/>.
 
-``` r
-@Misc{rcbayes,
-  Title     = {rcbayes: {A}n {R} package for Bayesian Rogers-Castro Migration Age Schedules},
-  Author    = {Alexander, M and Yeung, J and Riffe, T},
-  Year      = {2021},
-  note      = {URL:~\url{https://github.com/jessieyeung/rcbayes/}}
-}
-```
+    @Misc{rcbayes,
+      Title     = {rcbayes: {A}n {R} package for Bayesian Rogers-Castro Migration Age Schedules},
+      Author    = {Alexander, M and Yeung, J and Riffe, T},
+      Year      = {2021},
+      note      = {URL:~\url{https://github.com/jessieyeung/rcbayes/}}
+    }
