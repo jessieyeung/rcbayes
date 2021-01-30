@@ -4,7 +4,7 @@
 Date: 2021-01-30
 
 The `rcbayes` package is an R package that contains functions to
-calculate and estiamte Rogers-Castro migration age schedules in a
+calculate and estimate Rogers-Castro migration age schedules in a
 Bayesian framework. It is in active development.
 
 `rcbayes` is a spin-off package that is called on by
@@ -40,7 +40,7 @@ library(rcbayes)
 ```
 
 Note that this package requires `rstan`. If you have issues installing
-`rstan` additional information is avaliable
+`rstan` additional information is available
 [here](https://github.com/stan-dev/rstan/wiki), as well as from a
 general Google search.
 
@@ -48,7 +48,7 @@ general Google search.
 
 To cite `rcbayes` in publications, please use:
 
-Alexander M, Yeung J and Riffe T. (2021) rcbayes: An R package of tools
+Alexander M, Yeung J, and Riffe T. (2021) rcbayes: An R package of tools
 for Bayesian Rogers-Castro Migratio Age Schedules URL:
 <https://github.com/jessieyeung/rcbayes/>.
 
