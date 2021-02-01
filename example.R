@@ -35,7 +35,7 @@ res <- mig_estimate_rc(ages, net_mig, pop,
                        pre_working_age = TRUE,
                        working_age = TRUE,
                        retirement = TRUE,
-                       post_retirement = TRUE, iter=100,
+                       post_retirement = TRUE,
                        #control = list(adapt_delta = 0.95, max_treedepth = 10),
                        init = init_rc(ages, net_mig, pop,
                                              pre_working_age=TRUE, working_age=TRUE,
@@ -62,4 +62,28 @@ res <- mig_estimate_rc(ages, net_mig, pop,
                        post_retirement = TRUE,
                        init = iv)
 
+# vignette example
+library(rcbayes)
 
+ages <- 0:80
+
+pop <- c(2028, 2193, 2271, 2370, 2403, 2160, 2109, 2206, 2456, 2334, 2392, 2534, 2542, 2601, 2526,
+         2416, 2420, 2344, 2606, 2355, 2867, 2589, 2426, 2390, 2377, 2909, 2753, 2633, 2847, 2819,
+         2979, 2608, 2708, 2602, 2745, 2883, 2624, 2607, 2677, 2637, 2964, 2414, 2481, 2464, 2510,
+         2695, 2552, 2711, 2794, 2683, 2888, 2439, 2631, 2814, 2854, 2999, 2959, 2852, 2957, 2985,
+         2970, 2882, 2839, 2737, 2782, 2799, 2710, 2527, 2512, 2530, 2505, 2521, 2551, 2125, 1838,
+         2057, 2037, 1804, 1542, 1470, 1452)
+
+net_mig <- c(49, 48, 48, 52, 50, 45, 42, 46, 45, 44, 47, 55, 57, 59, 67, 69, 71, 78, 93, 88, 116,
+             106, 102, 104, 102, 123, 112, 102, 112, 105, 100, 83, 81, 77, 78, 77, 66, 64, 65, 64,
+             68, 52, 59, 51, 54, 55, 52, 58, 64, 53, 68, 53, 57, 67, 71, 78, 75, 77, 77, 83, 88,
+             80, 84, 79, 77, 83, 71, 59, 65, 67, 64, 63, 56, 50, 43, 46, 46, 38, 32, 28, 29)
+
+
+res <- mig_estimate_rc(ages, net_mig, pop,
+                       pre_working_age = TRUE,
+                       working_age = TRUE,
+                       retirement = TRUE,
+                       post_retirement = FALSE)
+
+res[['check_converge']]
