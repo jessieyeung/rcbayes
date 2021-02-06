@@ -49,7 +49,7 @@ general Google search.
 To cite `rcbayes` in publications, please use:
 
 Alexander M, Yeung J, and Riffe T. (2021) rcbayes: An R package of tools
-for Bayesian Rogers-Castro Migratio Age Schedules URL:
+for Bayesian Rogers-Castro Migration Age Schedules URL:
 <https://github.com/jessieyeung/rcbayes/>.
 
     @Misc{rcbayes,
