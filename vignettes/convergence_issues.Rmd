@@ -1,0 +1,195 @@
+---
+title: "Achieving Model Convergence With mig_estimate_rc"
+author: "Monica Alexander, Jessie Yeung, Tim Riffe"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+bibliography: REFERENCES.bib
+vignette: >
+  %\VignetteIndexEntry{Achieving Model Convergence With mig_estimate_rc}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE,
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center"
+)
+```
+
+
+## Model Diagnostics in Bayesian Models
+
+### Overview
+The `mig_estimate_rc` function estimates Rogers-Castro parameters in a Bayesian framework using a Markov Chain Monte Carlo (MCMC) algorithm, via the Stan programming language [@carpenter2017stan]. This method of estimation is advantageous for models that are difficult to estimate and highly non-linear (such as the Rogers-Castro model). However for models estimated using MCMC algorithms, it is necessary to check the model diagnostics before interpreting model results. 
+
+The output of `mig_estimate_rc` allows you to easily check two diagnostic values in the `check_converge` object of the output: 
+
+* The potential scale reduction statistic, commonly referred to as the **R-hat** statistic, provides insight into whether the model has converged [@gelman1992inference]. You want the R-hat values to be close to 1, and R-hat values far greater than 1 indicate that convergence has not been achieved. Generally, Gelman et al. recommend ensuring that R-hat values are below 1.1, although there is no universally agreed upon threshold [@gelman2013bayesian].
+
+* The **Effective sample size** provides insight into the autocorrelation among samples in the same chain. The larger the effective sample size the better. If your effective sample size is small, you should consider increasing the number of MCMC samples.
+
+The rest of this document focuses on dealing with convergence issues, which will likely be reflected as large R-hat values. It is not uncommon to find that your model has not converged. This is particularly true if your total population size is large or you are fitting either the 11 or 13 parameter models. Resolving a non-convergent model is not always straight-forward, but we will explain some strategies that can be used with `mig_estimate_rc`. 
+
+## Example of a Non-Convergent Model
+
+Here is an example of a non-convergent model. We will be fitting the full 13-parameter model. 
+
+```{r, include=FALSE}
+set.seed(123)
+```
+
+```{r}
+library(rcbayes)
+library(tibble)
+library(ggplot2)
+
+ages <- 0:80
+net_mig <- c(11804, 10606, 9845, 9244, 8471, 7940, 7348, 6885, 6431, 
+             6055, 5454, 4997, 4845, 4596, 4397, 4814, 4592, 4646, 5386, 
+             7180, 11374, 14713, 17195, 18937, 19223, 19091, 18507, 
+             17615, 16929, 15693, 15246, 14152, 13365, 12340, 11609, 
+             10278, 9547, 8992, 8438, 7883, 7315, 6909, 6730, 6272, 
+             5994, 6087, 5896, 5592, 5487, 5237, 6021, 5933, 5577, 
+             5674, 5503, 4916, 5008, 4822, 4824, 4696, 4086, 4019, 
+             4139, 4054, 4134, 3625, 3871, 4238, 4306, 4440, 3118, 
+             2980, 2885, 2845, 2795, 2085, 2076, 2035, 2030, 1986, 2037)
+pop <- c(105505, 105505, 105505, 105505, 105505, 106126, 106126, 106126, 
+         106126, 106126, 100104, 100104, 100104, 100104, 100104, 114880, 
+         114880, 114880, 114880, 114880, 136845, 136845, 136845, 136845, 
+         136845, 136582, 136582, 136582, 136582, 136582, 141935, 141935, 
+         141935, 141935, 141935, 134097, 134097, 134097, 134097, 134097, 
+         130769, 130769, 130769, 130769, 130769, 133718, 133718, 133718, 
+         133718, 133718, 154178, 154178, 154178, 154178, 154178, 145386, 
+         145386, 145386, 145386, 145386, 126270, 126270, 126270, 126270, 
+         126270, 108314, 108314, 108314, 108314, 108314, 79827, 79827, 
+         79827, 79827, 79827, 59556, 59556, 59556, 59556, 59556, 59556)
+
+rc_res <- mig_estimate_rc(
+  ages, net_mig, pop, 
+  pre_working_age = TRUE,
+  working_age = TRUE,
+  retirement = TRUE,
+  post_retirement = TRUE
+)
+```
+
+The `check_converge` object in the function output will provide model diagnostics. 
+
+```{r}
+rc_res[['check_converge']]
+```
+
+We see that there are many R-hat values that are very large and thus the model has not converged properly. Even if we were to continue to plot the results, we can see that bounds don't look quite right. 
+
+```{r}
+rc_res[["fit_df"]] %>%
+  ggplot(aes(ages, data)) +
+  geom_point(aes(color = "data")) +
+  geom_line(aes(x = age, y = median, color = "fit")) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+  scale_color_manual(name = "", values = c(data = "red", fit = "black")) +
+  ylab("migration rate")
+```
+
+We need to fix this non-convergent model before any of the results can be used. 
+
+## Method 1: Adjusting Stan Parameters
+
+One method for improving convergence is to adjust the Stan parameters. Stan may already provide warnings about divergent transitions, low effective sample size and/or maximum treedepth. These errors may suggest specific parameters to change. 
+
+To adjust stan parameters, `mig_estimate_rc` can accept additional inputs for stan. For example, to increase the `max_treedepth`, `adapt_delta`, and number of iterations, you can do the following: 
+
+```{r, eval=FALSE}
+res <- mig_estimate_rc(ages, net_mig, pop,
+                       pre_working_age = TRUE,
+                       working_age = TRUE,
+                       retirement = TRUE,
+                       post_retirement = TRUE,
+                       #optional inputs into stan
+                       iter = 3000,
+                       control = list(adapt_delta = 0.95, max_treedepth = 10)
+                       )
+```
+
+A full list of Stan parameters is available in the [Stan documentation](https://mc-stan.org/rstan/reference/stan.html). 
+
+## Method 2: Setting initial conditions using `init_rc`
+
+One of the additional parameters that can be provided to Stan is `iter`, which specifies initial values for the MCMC algorithm. For the Rogers-Castro model, it is possible to improve the likelihood of achieving convergence by strategically set the initial values based on the data. This technique is formalized in the `init_rc` function, which will output initial values in a list format that can be provided directly to stan. 
+
+```{r, eval=FALSE}
+init_vals <- init_rc(ages, 
+                     net_mig, 
+                     pop, 
+                     pre_working_age = TRUE,
+                     working_age = TRUE,
+                     retirement = TRUE,
+                     post_retirement = TRUE,
+                     nchains = 4)
+
+res <- mig_estimate_rc(ages, net_mig, pop,
+                       pre_working_age = TRUE,
+                       working_age = TRUE,
+                       retirement = TRUE,
+                       post_retirement = TRUE,
+                       #optional inputs into stan
+                       init = init_vals
+                       )
+```
+
+In particular, the `init_rc` function will crudely estimate particular parameters. Here is a simplified explanation of how it determines initial values. 
+
+* The `a` parameters describe the heights of peaks. Use the local maximums within specific age ranges. 
+* The `mu` parameters describe the age at which peaks occur. Use the ages associated with local maximums described above. 
+* The `c` parameter describes the overall migration level. Use the minimum observed migration rate. 
+
+## Example: Fixing a Non-Convergent Model
+
+Recall the example above of a non-convergent model. We will fix this model by adjusting the Stan parameters and using `init_rc` to set initial values. 
+
+```{r}
+init_vals <- init_rc(ages, 
+                     net_mig, 
+                     pop, 
+                     pre_working_age = TRUE,
+                     working_age = TRUE,
+                     retirement = TRUE,
+                     post_retirement = TRUE,
+                     nchains = 4)
+
+res <- mig_estimate_rc(ages, net_mig, pop,
+                       pre_working_age = TRUE,
+                       working_age = TRUE,
+                       retirement = TRUE,
+                       post_retirement = TRUE,
+                       #optional inputs into stan
+                       control = list(adapt_delta = 0.95, max_treedepth = 10),
+                       init = init_vals
+)
+
+rc_res[['check_converge']]
+```
+
+All the R-hat values are very close to 1 and effective sample sizes are sufficiently large. 
+
+We can now plot and interpret the model results. 
+
+```{r}
+rc_res[["fit_df"]] %>%
+  ggplot(aes(ages, data)) +
+  geom_point(aes(color = "data")) +
+  geom_line(aes(x = age, y = median, color = "fit")) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+  scale_color_manual(name = "", values = c(data = "red", fit = "black")) +
+  ylab("migration rate")
+```
+
+## References
+
+
+
