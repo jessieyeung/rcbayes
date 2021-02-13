@@ -120,7 +120,7 @@ A full list of Stan parameters is available in the [Stan documentation](https://
 
 ## Method 2: Setting initial conditions using `init_rc`
 
-One of the additional parameters that can be provided to Stan is `iter`, which specifies initial values for the MCMC algorithm. For the Rogers-Castro model, it is possible to improve the likelihood of achieving convergence by strategically set the initial values based on the data. This technique is formalized in the `init_rc` function, which will output initial values in a list format that can be provided directly to stan. 
+One of the additional parameters that can be provided to Stan is `iter`, which specifies initial values for the MCMC algorithm. For the Rogers-Castro model, it is possible to improve the likelihood of achieving convergence by strategically setting the initial values based on the data. This technique is formalized in the `init_rc` function, which will output initial values in a list format that can be provided directly to stan. 
 
 ```{r, eval=FALSE}
 init_vals <- init_rc(ages, 
@@ -144,9 +144,9 @@ res <- mig_estimate_rc(ages, net_mig, pop,
 
 In particular, the `init_rc` function will crudely estimate particular parameters. Here is a simplified explanation of how it determines initial values. 
 
-* The `a` parameters describe the heights of peaks. Use the local maximums within specific age ranges. 
-* The `mu` parameters describe the age at which peaks occur. Use the ages associated with local maximums described above. 
-* The `c` parameter describes the overall migration level. Use the minimum observed migration rate. 
+* The `a` parameters describe the heights of peaks. The function uses the local maximums within specific age ranges. 
+* The `mu` parameters describe the age at which peaks occur. The function uses the ages associated with local maximums described above. 
+* The `c` parameter describes the overall migration level. The function uses the minimum observed migration rate. 
 
 ## Example: Fixing a Non-Convergent Model
 
