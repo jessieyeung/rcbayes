@@ -19,7 +19,8 @@ Imports:
     rlang,
     tibble,
     tidybayes,
-    magrittr
+    magrittr,
+    shiny
 RdMacros: Rdpack
 Suggests: 
     knitr,
