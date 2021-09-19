@@ -22,7 +22,6 @@ knitr::opts_chunk$set(
   fig.height = 4,
   fig.align = "center"
 )
-
 ```
 
 
@@ -74,7 +73,7 @@ library(ggplot2)
 pars <- c(a1= 0.09, alpha1= 0.1,
           a2= 0.2, alpha2= 0.1, mu2= 21, lambda2= 0.4,
           a3= 0.02, alpha3= 0.25, mu3= 67, lambda3= 0.6,
-          a4 = 0.01, lambda4 = 0.01,
+          a4= 0.01, lambda4= 0.01,
           c= 0.01)
 
 ages <- 0:100

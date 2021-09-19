@@ -10,7 +10,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include = FALSE}
+```{r setup, include = FALSE, eval=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -70,7 +70,7 @@ pop <- c(105505, 105505, 105505, 105505, 105505, 106126, 106126, 106126,
          79827, 79827, 79827, 59556, 59556, 59556, 59556, 59556, 59556)
 
 rc_res <- mig_estimate_rc(
-  ages, net_mig, pop, 
+  ages, net_mig, pop,
   pre_working_age = TRUE,
   working_age = TRUE,
   retirement = TRUE,
@@ -120,12 +120,12 @@ A full list of Stan parameters is available in the [Stan documentation](https://
 
 ## Method 2: Setting initial conditions using `init_rc`
 
-One of the additional parameters that can be provided to Stan is `iter`, which specifies initial values for the MCMC algorithm. For the Rogers-Castro model, it is possible to improve the likelihood of achieving convergence by strategically setting the initial values based on the data. This technique is formalized in the `init_rc` function, which will output initial values in a list format that can be provided directly to stan. 
+One of the additional parameters that can be provided to Stan is `init`, which specifies initial values for the MCMC algorithm. For the Rogers-Castro model, it is possible to improve the likelihood of achieving convergence by strategically setting the initial values based on the data. This technique is formalized in the `init_rc` function, which will output initial values in a list format that can be provided directly to stan. 
 
 ```{r, eval=FALSE}
-init_vals <- init_rc(ages, 
-                     net_mig, 
-                     pop, 
+init_vals <- init_rc(ages,
+                     net_mig,
+                     pop,
                      pre_working_age = TRUE,
                      working_age = TRUE,
                      retirement = TRUE,
@@ -153,16 +153,16 @@ In particular, the `init_rc` function will crudely estimate particular parameter
 Recall the example above of a non-convergent model. We will fix this model by adjusting the Stan parameters and using `init_rc` to set initial values. 
 
 ```{r}
-init_vals <- init_rc(ages, 
-                     net_mig, 
-                     pop, 
+init_vals <- init_rc(ages,
+                     net_mig,
+                     pop,
                      pre_working_age = TRUE,
                      working_age = TRUE,
                      retirement = TRUE,
                      post_retirement = TRUE,
                      nchains = 4)
 
-res <- mig_estimate_rc(ages, net_mig, pop,
+rc_res_fixed <- mig_estimate_rc(ages, net_mig, pop,
                        pre_working_age = TRUE,
                        working_age = TRUE,
                        retirement = TRUE,
@@ -172,7 +172,7 @@ res <- mig_estimate_rc(ages, net_mig, pop,
                        init = init_vals
 )
 
-rc_res[['check_converge']]
+rc_res_fixed[['check_converge']]
 ```
 
 All the R-hat values are very close to 1 and effective sample sizes are sufficiently large. 
@@ -180,7 +180,7 @@ All the R-hat values are very close to 1 and effective sample sizes are sufficie
 We can now plot and interpret the model results. 
 
 ```{r}
-rc_res[["fit_df"]] %>%
+rc_res_fixed[["fit_df"]] %>%
   ggplot(aes(ages, data)) +
   geom_point(aes(color = "data")) +
   geom_line(aes(x = age, y = median, color = "fit")) +

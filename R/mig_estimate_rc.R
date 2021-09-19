@@ -216,7 +216,7 @@ c ~ normal(min(to_vector(y) ./ pop),0.1);
               upper = quantile(!!sym(".value"), 0.975)) %>%
     dplyr::ungroup() %>%
     dplyr::rename("variable" = !!sym(".variable")) %>%
-    dplyr::mutate("variable" = gsub("\\[1\\]", "", "variable"))
+    dplyr::mutate(variable = gsub("\\[1\\]", "", variable))
 
   check_converge <- rstan::summary(rc_fit)$summary[1:length(parnames),c("mean", "se_mean", "n_eff", "Rhat")]
 
