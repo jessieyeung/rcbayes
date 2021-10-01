@@ -55,7 +55,7 @@
 #'         59556,59556,59556,59556,59556)
 #'
 #' # fit the model
-#'
+#' \dontrun{
 #' res <- mig_estimate_rc(ages, net_mig, pop,
 #'                        pre_working_age = TRUE,
 #'                        working_age = TRUE,
@@ -64,7 +64,7 @@
 #'                        #optional inputs into stan
 #'                        control = list(adapt_delta = 0.95, max_treedepth = 10)
 #'                        )
-#' \dontrun{
+#'
 #' # plot the results and data
 #' plot(ages, net_mig/pop, ylab = "migration rate", xlab = "age")
 #' lines(ages, res[["fit_df"]]$median, col = "red")
