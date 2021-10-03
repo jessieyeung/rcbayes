@@ -11,7 +11,7 @@
 #' @param retirement logical (TRUE/FALSE). Whether or not to include retirement age component.
 #' @param post_retirement logical (TRUE/FALSE). Whether or not to include post retirement age component.
 #' @param ... additional inputs to stan, see ?rstan::stan for details.
-#' @importFrom rstan stan extract
+#' @importFrom rstan sampling extract
 #' @import Rcpp
 #' @importFrom stats quantile median
 #' @importFrom magrittr %>%
@@ -20,7 +20,6 @@
 #' @importFrom tibble tibble
 #' @importFrom tibble as.tibble
 #' @importFrom tidybayes gather_draws
-#' @importFrom rstan extract
 #' @export
 #' @examples
 #' # define ages, net migrants, and population
@@ -54,8 +53,8 @@
 #'         79827,79827,79827,79827,79827,59556,
 #'         59556,59556,59556,59556,59556)
 #'
-#' # fit the model
 #' \dontrun{
+#' # fit the model
 #' res <- mig_estimate_rc(ages, net_mig, pop,
 #'                        pre_working_age = TRUE,
 #'                        working_age = TRUE,
@@ -64,7 +63,6 @@
 #'                        #optional inputs into stan
 #'                        control = list(adapt_delta = 0.95, max_treedepth = 10)
 #'                        )
-#'
 #' # plot the results and data
 #' plot(ages, net_mig/pop, ylab = "migration rate", xlab = "age")
 #' lines(ages, res[["fit_df"]]$median, col = "red")
@@ -97,91 +95,9 @@ mig_estimate_rc <- function(ages,
     post_retirement = as.numeric(post_retirement)
   )
 
-  # model
-
-  rc_flexible <- 'data {
-  int<lower=0,upper=1> pre_working_age;         // 0 = no, 1 = yes
-  int<lower=0,upper=1> working_age;             // 0 = no, 1 = yes
-  int<lower=0,upper=1> retirement;              // 0 = no, 1 = yes
-  int<lower=0,upper=1> post_retirement;         // 0 = no, 1 = yes
-  int<lower=0> N;
-  vector[N] x;                                  //ages
-  int<lower=0> y[N];                            //age-specific net migrants
-  vector[N] pop;                                //age-specific population size
-}
-parameters {
-real<lower=0> alpha1[1*pre_working_age];
-real<lower=0> alpha2[1*working_age];
-real<lower=0> alpha3[1*retirement];
-real<lower=0, upper=1> a1[1*pre_working_age];
-real<lower=0, upper=1> a2[1*working_age];
-real<lower=0, upper=1> a3[1*retirement];
-real<lower=0, upper=1> a4[1*post_retirement];
-real<lower=0> mu2[1*working_age];
-real<lower=0, upper=max(x)> mu3[1*retirement];
-real<lower=0> lambda2[1*working_age];
-real<lower=0> lambda3[1*retirement];
-real<upper=0.05> lambda4[1*post_retirement];
-real<lower=0, upper=1> c;
-}
-transformed parameters {
-vector[N] mu_rc;
-vector[N] mu_rc_1;
-vector[N] mu_rc_2;
-vector[N] mu_rc_3;
-vector[N] mu_rc_4;
-vector[N] zero;
-
-for(i in 1:N){
-zero[i] = 0;
-}
-
-mu_rc_1 = pre_working_age==1?a1[1]*exp(-alpha1[1]*x):zero;
-mu_rc_2 = working_age==1?a2[1]*exp(-alpha2[1]*(x - mu2[1]) - exp(-lambda2[1]*(x - mu2[1]))):zero;
-mu_rc_3 = retirement==1?a3[1]*exp(-alpha3[1]*(x - mu3[1]) - exp(-lambda3[1]*(x - mu3[1]))):zero;
-mu_rc_4 = post_retirement==1?a4[1]*exp(lambda4[1]*(x)):zero;
-mu_rc = mu_rc_1 + mu_rc_2 + mu_rc_3 + mu_rc_4 + c;
-}
-model {
-// likelihood
-
-vector[N] log_lambda;
-
-for (i in 1:N){
-log_lambda[i] = mu_rc[i] + pop[i];
-}
-
-y ~ poisson(mu_rc .* pop);
-
-//priors
-
-if(pre_working_age==1){
-alpha1 ~ normal(0,1);
-a1 ~ normal(0,0.1);
-}
-if(working_age==1){
-alpha2 ~ normal(0,1);
-a2 ~ normal(0,0.1);
-mu2 ~ normal(25,1);
-lambda2 ~ normal(0,1);
-}
-if(retirement==1){
-alpha3 ~ normal(0,1);
-a3 ~ normal(0,0.1);
-mu3 ~ normal(65,1);
-lambda3 ~ normal(0,1);
-}
-if(post_retirement==1){
-a4 ~ normal(0,0.05);
-lambda4 ~ normal(0,0.01);
-}
-c ~ normal(min(to_vector(y) ./ pop),0.1);
-}'
-
-
   # fit the model
-  #rc_fit <- rstan::sampling(stanmodels$rc_flexible, data = mig_data, ...)
-  rc_fit <- rstan::stan(model_code = rc_flexible, data = mig_data, ...)
+  rc_fit <- rstan::sampling(stanmodels$rcmodel, data = mig_data, ...)
+  #rc_fit <- rstan::stan(model_code = rc_flexible, data = mig_data, ...)
 
   # extract the posterior samples
   list_of_draws <- rstan::extract(rc_fit)
