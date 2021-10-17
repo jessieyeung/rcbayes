@@ -6,6 +6,9 @@
 \usage{
 interact_rc()
 }
+\value{
+No return value, called for interactive widget
+}
 \description{
 Run an interactive Rogers-Castro app. Use interactive sliders to see how parameters affect the Rogers-Castro age schedules.
 }

@@ -4,7 +4,7 @@ Version: 0.1.0
 Authors@R: c(
     person("Jessie", "Yeung", role = c("aut", "cre"), email = "jessieyeung1@gmail.com",),
     person("Monica", "Alexander", role = "aut", comment = c(ORCID = "0000-0002-8135-3435")))
-Description: A collection of functions to estimate Rogers-Castro migration age schedules using Stan. 
+Description: A collection of functions to estimate Rogers-Castro migration age schedules using 'Stan'. This model which describes the fundamental relationship between migration and age in the form of a flexible multi-exponential migration model was most notably proposed in Rogers and Castro (1978) <doi:10.1068/a1004759>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -26,7 +26,8 @@ Imports:
     tibble,
     tidybayes,
     magrittr,
-    shiny
+    shiny,
+    shinythemes
 LinkingTo: 
     BH (>= 1.66.0),
     Rcpp (>= 0.12.0),

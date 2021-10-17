@@ -2,7 +2,7 @@
 #'
 #' @description Choose initial values for parameters in the Rogers-Castro model in a strategic way based on your data.
 #' Provide these initial values to improve convergence of model. Intended to be used with rcbayes::mig_estimate_rc as
-#' an additional input into stan.
+#' an additional input into 'Stan'.
 #'
 #' @param ages numeric. A vector of integers for ages.
 #' @param net_mig numeric. A vector of integers for observed age-specific net migrants.
@@ -13,6 +13,8 @@
 #' @param post_retirement logical (TRUE/FALSE). Whether or not you are including post retirement age component.
 #' @param nchains numeric. A positive integer specifying the number of Markov chains. Should be 4 unless changed otherwise.
 #' @importFrom stats runif
+#' @return A list of length \code{nchains}. Each element of the list is a list of numeric values.
+#' Within the inner lists, there is one element for every model parameter.
 #' @export
 #'
 #' @examples
@@ -48,20 +50,10 @@
 #'         59556,59556,59556,59556,59556)
 #'
 #'#compute initial values
-#'iv <- init_rc(ages, net_mig, pop, TRUE, TRUE, TRUE, TRUE)
+#'iv <- init_rc(ages, net_mig, pop, pre_working_age=TRUE,
+#'              working_age=TRUE, retirement=TRUE, post_retirement=TRUE)
 #'
-#' # fit the model
-#' \dontrun{
-#' res <- mig_estimate_rc(ages, net_mig, pop,
-#'                        pre_working_age = TRUE,
-#'                        working_age = TRUE,
-#'                        retirement = TRUE,
-#'                        post_retirement = FALSE,
-#'                        #optional inputs into stan
-#'                        control = list(adapt_delta = 0.95, max_treedepth = 10),
-#'                        init = iv
-#'                        )
-#' }
+
 init_rc <- function(ages, net_mig, pop, pre_working_age, working_age, retirement, post_retirement, nchains=4){
   rate <- net_mig / pop
   rate_ranked <- order(rate, decreasing=T)

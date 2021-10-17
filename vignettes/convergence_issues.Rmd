@@ -176,7 +176,7 @@ We need to fix this non-convergent model before any of the results can be used.
 
 One method for improving convergence is to adjust the Stan parameters. Stan may already provide warnings about divergent transitions, low effective sample size and/or maximum treedepth. These errors may suggest specific parameters to change. 
 
-To adjust stan parameters, `mig_estimate_rc` can accept additional inputs for stan. For example, to increase the `max_treedepth`, `adapt_delta`, and number of iterations, you can do the following: 
+To adjust Stan parameters, `mig_estimate_rc` can accept additional inputs for Stan. For example, to increase the `max_treedepth`, `adapt_delta`, and number of iterations, you can do the following: 
 
 ```{r, eval=FALSE}
 res <- mig_estimate_rc(ages, net_mig, pop,
