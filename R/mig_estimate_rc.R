@@ -20,6 +20,9 @@
 #' @importFrom tibble tibble
 #' @importFrom tibble as.tibble
 #' @importFrom tidybayes gather_draws
+#' @return A list of length 3. The first element, \code{pars_df}, is a data frame that provides parameter estimates with 95% credible intervals.
+#' The second element, \code{fit_df}, is a data frame that shows the data and estimated migration rates at each age.
+#' The third element, \code{check_converge}, is a data frame that provides the R-hat values and effective sample sizes.
 #' @export
 #' @examples
 #' # define ages, net migrants, and population
@@ -53,7 +56,7 @@
 #'         79827,79827,79827,79827,79827,59556,
 #'         59556,59556,59556,59556,59556)
 #'
-#' \dontrun{
+#'
 #' # fit the model
 #' res <- mig_estimate_rc(ages, net_mig, pop,
 #'                        pre_working_age = TRUE,
@@ -61,13 +64,14 @@
 #'                        retirement = TRUE,
 #'                        post_retirement = FALSE,
 #'                        #optional inputs into stan
-#'                        control = list(adapt_delta = 0.95, max_treedepth = 10)
+#'                        control = list(adapt_delta = 0.95, max_treedepth = 10),
+#'                        iter = 10, chains = 1 #to speed up example
 #'                        )
 #' # plot the results and data
 #' plot(ages, net_mig/pop, ylab = "migration rate", xlab = "age")
 #' lines(ages, res[["fit_df"]]$median, col = "red")
 #' legend("topright", legend=c("data", "fit"), col=c("black", "red"), lty=1, pch = 1)
-#' }
+#'
 mig_estimate_rc <- function(ages,
                             net_mig,
                             pop,
