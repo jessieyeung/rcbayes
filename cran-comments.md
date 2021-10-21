@@ -9,6 +9,8 @@ This is a resubmission. In this version I have:
 
 * Removed some uses of \dontrun{}. Ensured that \dontrun{} is only used if the example really cannot be executed. 
 
+* Fixed incorrect DOI
+
 ## Test environments
 * local R installation, R 4.1.1
 * Fedora Linux, R-devel, clang, gfortran (via rhub)
