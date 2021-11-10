@@ -5,7 +5,7 @@ data {
   int<lower=0,upper=1> post_retirement;         // 0 = no, 1 = yes
   int<lower=0> N;
   vector[N] x;                                  //ages
-  int<lower=0> y[N];                            //age-specific net migrants
+  int<lower=0> y[N];                            //age-specific migrants
   vector[N] pop;                                //age-specific population size
 }
 parameters {

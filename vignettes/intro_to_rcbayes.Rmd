@@ -113,7 +113,7 @@ Note, however, that all parameters within a particular component family must be 
 
 #### Overview
 
-The `mig_estimate_rc` function returns estimated Rogers-Castro parameters and $m(x)$ values, based on observed age-specific net migrants, age-specific population sizes, an age range, and the Rogers-Castro components to be included in the model. The function has the capability of estimating a Rogers-Castro age schedule with any combination of the components `pre_working_age`, `working_age`, `retirement` and `post_retirement`. These are specified as logicals (either `TRUE` or `FALSE`) in the function.
+The `mig_estimate_rc` function returns estimated Rogers-Castro parameters and $m(x)$ values, based on observed age-specific migrants, age-specific population sizes, an age range, and the Rogers-Castro components to be included in the model. The function has the capability of estimating a Rogers-Castro age schedule with any combination of the components `pre_working_age`, `working_age`, `retirement` and `post_retirement`. These are specified as logicals (either `TRUE` or `FALSE`) in the function.
 
 As illustrated above, Rogers-Castro migration age schedules are highly non-linear, as so are not necessarily straight forward to estimate. Previous approaches have used, for example, Excel's Solver function or the `optim` function in `R`.[^1] However, the estimated parameters and schedules are highly sensitive to the initial values chosen for the parameter values, and convergence is difficult to achieve for the 11 and 13 parameter models.
 
@@ -131,10 +131,10 @@ set.seed(123)
 
 ```{r}
 ages <- 0:80
-net_mig <- c(49, 48, 48, 52, 50, 45, 42, 46, 45, 44, 47, 55, 57, 59, 67, 69, 71, 78, 93, 88, 116,
-             106, 102, 104, 102, 123, 112, 102, 112, 105, 100, 83, 81, 77, 78, 77, 66, 64, 65, 64,
-             68, 52, 59, 51, 54, 55, 52, 58, 64, 53, 68, 53, 57, 67, 71, 78, 75, 77, 77, 83, 88,
-             80, 84, 79, 77, 83, 71, 59, 65, 67, 64, 63, 56, 50, 43, 46, 46, 38, 32, 28, 29)
+migrants <- c(49, 48, 48, 52, 50, 45, 42, 46, 45, 44, 47, 55, 57, 59, 67, 69, 71, 78, 93, 88, 116,
+              106, 102, 104, 102, 123, 112, 102, 112, 105, 100, 83, 81, 77, 78, 77, 66, 64, 65, 64,
+              68, 52, 59, 51, 54, 55, 52, 58, 64, 53, 68, 53, 57, 67, 71, 78, 75, 77, 77, 83, 88,
+              80, 84, 79, 77, 83, 71, 59, 65, 67, 64, 63, 56, 50, 43, 46, 46, 38, 32, 28, 29)
 pop <- c(2028, 2193, 2271, 2370, 2403, 2160, 2109, 2206, 2456, 2334, 2392, 2534, 2542, 2601, 2526,
          2416, 2420, 2344, 2606, 2355, 2867, 2589, 2426, 2390, 2377, 2909, 2753, 2633, 2847, 2819,
          2979, 2608, 2708, 2602, 2745, 2883, 2624, 2607, 2677, 2637, 2964, 2414, 2481, 2464, 2510,
@@ -142,7 +142,7 @@ pop <- c(2028, 2193, 2271, 2370, 2403, 2160, 2109, 2206, 2456, 2334, 2392, 2534,
          2970, 2882, 2839, 2737, 2782, 2799, 2710, 2527, 2512, 2530, 2505, 2521, 2551, 2125, 1838,
          2057, 2037, 1804, 1542, 1470, 1452)
 
-df <- tibble(age = ages, mx = net_mig / pop)
+df <- tibble(age = ages, mx = migrants / pop)
 df %>%
   ggplot(aes(age, mx)) +
   geom_point() +
@@ -154,7 +154,7 @@ Let's fit a Rogers-Castro migration age schedule to these data. Below, we choose
 
 ```{r, eval=FALSE}
 rc_res <- mig_estimate_rc(
-  ages, net_mig, pop,
+  ages, migrants, pop,
   pre_working_age = TRUE,
   working_age = TRUE,
   retirement = TRUE,
@@ -208,8 +208,8 @@ rc_res[['pars_df']] <- tibble(variable = c("a1","a2","a3","alpha1","alpha2","alp
        upper = c(0.01106290,  0.06797684,  0.02883773,  2.25796406,  0.23777804,  0.35320899,  0.02185859,
                  0.16919224,  0.19132286, 26.91274982, 66.84958398))
 
-rc_res[['fit_df']] <- tibble(age = 0:80,
-       data = net_mig/pop,
+rc_res[['fit_df']] <- tibble(ages = 0:80,
+       data = migrants/pop,
        median = c(0.02445917, 0.02212957, 0.02123731, 0.02083668, 0.02063243, 0.02050311, 0.02042182, 
                   0.02038452, 0.02039545, 0.02048247, 0.02069491, 0.02113354, 0.02188968, 0.02309565, 
                   0.02488725, 0.02723605, 0.03001204, 0.03295246, 0.03584502, 0.03844924, 0.04053613, 
@@ -288,7 +288,7 @@ We can plot the observed data and estimated fit using the `fit_df` object:
 rc_res[["fit_df"]] %>%
   ggplot(aes(ages, data)) +
   geom_point(aes(color = "data")) +
-  geom_line(aes(x = age, y = median, color = "fit")) +
+  geom_line(aes(x = ages, y = median, color = "fit")) +
   geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
   scale_color_manual(name = "", values = c(data = "red", fit = "black")) +
   ylab("migration rate")
