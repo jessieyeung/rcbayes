@@ -1,15 +1,16 @@
 #' Estimate Rogers-Castro migration age schedule
 
-#' @description Given a set of ages and observed age-specific net migrants, estimate the parameters of a Roger-Castro model migration schedule.
+#' @description Given a set of ages and observed age-specific migrants, estimate the parameters of a Roger-Castro model migration schedule.
 #' Choose between a 7, 9, 11 or 13 parameter model.
 
 #' @param ages numeric. A vector of integers for ages.
-#' @param net_mig numeric. A vector of integers for observed age-specific net migrants.
+#' @param migrants numeric. A vector of integers for observed age-specific migrants.
 #' @param pop numeric. A vector of integers for age-specific population.
 #' @param pre_working_age logical (TRUE/FALSE). Whether or not to include pre working age component.
 #' @param working_age logical (TRUE/FALSE). Whether or not to include working age component.
 #' @param retirement logical (TRUE/FALSE). Whether or not to include retirement age component.
 #' @param post_retirement logical (TRUE/FALSE). Whether or not to include post retirement age component.
+#' @param net_mig numeric. Deprecated argument, use migrants instead.
 #' @param ... additional inputs to stan, see ?rstan::stan for details.
 #' @importFrom rstan sampling extract
 #' @import Rcpp
@@ -25,9 +26,9 @@
 #' The third element, \code{check_converge}, is a data frame that provides the R-hat values and effective sample sizes.
 #' @export
 #' @examples
-#' # define ages, net migrants, and population
+#' # define ages, migrants, and population
 #' ages <- 0:80
-#'net_mig <- c(202,215,167,188,206,189,164,
+#'migrants <- c(202,215,167,188,206,189,164,
 #'             158,197,185,176,173,167,198,
 #'             203,237,249,274,319,345,487,
 #'             491,521,505,529,527,521,529,
@@ -58,7 +59,7 @@
 #'
 #'
 #' # fit the model
-#' res <- mig_estimate_rc(ages, net_mig, pop,
+#' res <- mig_estimate_rc(ages, migrants, pop,
 #'                        pre_working_age = TRUE,
 #'                        working_age = TRUE,
 #'                        retirement = TRUE,
@@ -68,25 +69,37 @@
 #'                        iter = 10, chains = 1 #to speed up example
 #'                        )
 #' # plot the results and data
-#' plot(ages, net_mig/pop, ylab = "migration rate", xlab = "age")
+#' plot(ages, migrants/pop, ylab = "migration rate", xlab = "age")
 #' lines(ages, res[["fit_df"]]$median, col = "red")
 #' legend("topright", legend=c("data", "fit"), col=c("black", "red"), lty=1, pch = 1)
 #'
 mig_estimate_rc <- function(ages,
-                            net_mig,
+                            migrants,
                             pop,
                             pre_working_age,
                             working_age,
                             retirement,
                             post_retirement,
+                            net_mig,
                             ...){
 
+  # initial checks
   stopifnot(any(pre_working_age, working_age, retirement, post_retirement))
+  if(!missing(net_mig)) stop("Argument net_mig deprecated, use migrants instead.")
+
+  if(missing(ages)) stop("ages is missing")
+  if(missing(migrants)) stop("migrants is missing")
+  if(missing(pop)) stop("pop is missing")
+
+  if(length(ages)!=length(migrants) | length(migrants)!=length(pop))
+    stop("length of arguments ages, migrants and pop must be equal")
+  if ( !all(migrants == floor(migrants)) ) stop("migrants must comprise of integers")
+  if (sum(migrants > pop)>0) stop("must have migrants <= pop")
 
   # data for model input
   x <- ages
   pop <- pop
-  y <- net_mig
+  y <- migrants
 
   mig_data <- list(
     N = length(x),

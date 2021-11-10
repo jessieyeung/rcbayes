@@ -6,19 +6,20 @@
 \usage{
 init_rc(
   ages,
-  net_mig,
+  migrants,
   pop,
   pre_working_age,
   working_age,
   retirement,
   post_retirement,
-  nchains = 4
+  nchains = 4,
+  net_mig
 )
 }
 \arguments{
 \item{ages}{numeric. A vector of integers for ages.}
 
-\item{net_mig}{numeric. A vector of integers for observed age-specific net migrants.}
+\item{migrants}{numeric. A vector of integers for observed age-specific migrants.}
 
 \item{pop}{numeric. A vector of integers for age-specific population.}
 
@@ -31,6 +32,8 @@ init_rc(
 \item{post_retirement}{logical (TRUE/FALSE). Whether or not you are including post retirement age component.}
 
 \item{nchains}{numeric. A positive integer specifying the number of Markov chains. Should be 4 unless changed otherwise.}
+
+\item{net_mig}{numeric. Deprecated argument, use migrants instead.}
 }
 \value{
 A list of length \code{nchains}. Each element of the list is a list of numeric values.
@@ -42,9 +45,9 @@ Provide these initial values to improve convergence of model. Intended to be use
 an additional input into 'Stan'.
 }
 \examples{
-# define ages, net migrants, and population
+# define ages, migrants, and population
 ages <- 0:80
-net_mig <- c(202,215,167,188,206,189,164,
+migrants <- c(202,215,167,188,206,189,164,
             158,197,185,176,173,167,198,
             203,237,249,274,319,345,487,
             491,521,505,529,527,521,529,
@@ -74,7 +77,7 @@ pop <- c(105505,105505,105505,105505,105505,
         59556,59556,59556,59556,59556)
 
 #compute initial values
-iv <- init_rc(ages, net_mig, pop, pre_working_age=TRUE,
+iv <- init_rc(ages, migrants, pop, pre_working_age=TRUE,
              working_age=TRUE, retirement=TRUE, post_retirement=TRUE)
 
 }

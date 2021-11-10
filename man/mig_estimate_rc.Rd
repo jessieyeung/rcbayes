@@ -6,19 +6,20 @@
 \usage{
 mig_estimate_rc(
   ages,
-  net_mig,
+  migrants,
   pop,
   pre_working_age,
   working_age,
   retirement,
   post_retirement,
+  net_mig,
   ...
 )
 }
 \arguments{
 \item{ages}{numeric. A vector of integers for ages.}
 
-\item{net_mig}{numeric. A vector of integers for observed age-specific net migrants.}
+\item{migrants}{numeric. A vector of integers for observed age-specific migrants.}
 
 \item{pop}{numeric. A vector of integers for age-specific population.}
 
@@ -30,6 +31,8 @@ mig_estimate_rc(
 
 \item{post_retirement}{logical (TRUE/FALSE). Whether or not to include post retirement age component.}
 
+\item{net_mig}{numeric. Deprecated argument, use migrants instead.}
+
 \item{...}{additional inputs to stan, see ?rstan::stan for details.}
 }
 \value{
@@ -38,13 +41,13 @@ The second element, \code{fit_df}, is a data frame that shows the data and estim
 The third element, \code{check_converge}, is a data frame that provides the R-hat values and effective sample sizes.
 }
 \description{
-Given a set of ages and observed age-specific net migrants, estimate the parameters of a Roger-Castro model migration schedule.
+Given a set of ages and observed age-specific migrants, estimate the parameters of a Roger-Castro model migration schedule.
 Choose between a 7, 9, 11 or 13 parameter model.
 }
 \examples{
-# define ages, net migrants, and population
+# define ages, migrants, and population
 ages <- 0:80
-net_mig <- c(202,215,167,188,206,189,164,
+migrants <- c(202,215,167,188,206,189,164,
             158,197,185,176,173,167,198,
             203,237,249,274,319,345,487,
             491,521,505,529,527,521,529,
@@ -75,7 +78,7 @@ pop <- c(105505,105505,105505,105505,105505,
 
 
 # fit the model
-res <- mig_estimate_rc(ages, net_mig, pop,
+res <- mig_estimate_rc(ages, migrants, pop,
                        pre_working_age = TRUE,
                        working_age = TRUE,
                        retirement = TRUE,
@@ -85,7 +88,7 @@ res <- mig_estimate_rc(ages, net_mig, pop,
                        iter = 10, chains = 1 #to speed up example
                        )
 # plot the results and data
-plot(ages, net_mig/pop, ylab = "migration rate", xlab = "age")
+plot(ages, migrants/pop, ylab = "migration rate", xlab = "age")
 lines(ages, res[["fit_df"]]$median, col = "red")
 legend("topright", legend=c("data", "fit"), col=c("black", "red"), lty=1, pch = 1)
 
