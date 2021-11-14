@@ -6,6 +6,7 @@
 #' @param ages numeric. A vector of integers for ages.
 #' @param migrants numeric. A vector of integers for observed age-specific migrants.
 #' @param pop numeric. A vector of integers for age-specific population.
+#' @param mx numeric. A vector of age-specific migration rates.
 #' @param pre_working_age logical (TRUE/FALSE). Whether or not to include pre working age component.
 #' @param working_age logical (TRUE/FALSE). Whether or not to include working age component.
 #' @param retirement logical (TRUE/FALSE). Whether or not to include retirement age component.
@@ -26,7 +27,7 @@
 #' The third element, \code{check_converge}, is a data frame that provides the R-hat values and effective sample sizes.
 #' @export
 #' @examples
-#' # define ages, migrants, and population
+#' # Ex 1: Run poisson model using ages, migrants, and population
 #' ages <- 0:80
 #'migrants <- c(202,215,167,188,206,189,164,
 #'             158,197,185,176,173,167,198,
@@ -59,7 +60,7 @@
 #'
 #'
 #' # fit the model
-#' res <- mig_estimate_rc(ages, migrants, pop,
+#' res <- mig_estimate_rc(ages = ages, migrants = migrants, pop = pop,
 #'                        pre_working_age = TRUE,
 #'                        working_age = TRUE,
 #'                        retirement = TRUE,
@@ -73,9 +74,45 @@
 #' lines(ages, res[["fit_df"]]$median, col = "red")
 #' legend("topright", legend=c("data", "fit"), col=c("black", "red"), lty=1, pch = 1)
 #'
+#' # Ex 2: Run normal model using ages and mx
+#' ages <- 0:80
+#' mx <- c(0.001914601, 0.002037818, 0.001582863, 0.001781906,
+#'         0.001952514, 0.001780902, 0.001545333, 0.001488796,
+#'         0.001856284, 0.001743211, 0.001758172, 0.001728203,
+#'         0.001668265, 0.001977943, 0.002027891, 0.002063022,
+#'         0.002167479, 0.002385097, 0.002776811, 0.003003134,
+#'         0.003558771, 0.003588001, 0.003807227, 0.003690307,
+#'         0.003865687, 0.003858488, 0.003814558, 0.003873131,
+#'         0.003712056, 0.003543659, 0.003290238, 0.003092965,
+#'         0.002811146, 0.002811146, 0.002677282, 0.002744282,
+#'         0.002311759, 0.002416161, 0.002155156, 0.002177528,
+#'         0.002064710, 0.002057062, 0.002179416, 0.001942356,
+#'         0.001873533, 0.001981783, 0.001921955, 0.001929434,
+#'         0.001966826, 0.001892041, 0.002244159, 0.001900401,
+#'         0.002153355, 0.002244159, 0.002263617, 0.002441776,
+#'         0.002655001, 0.002379872, 0.002366115, 0.002421141,
+#'         0.002621367, 0.002534252, 0.002431298, 0.002534252,
+#'         0.002455057, 0.002381964, 0.002345034, 0.002243477,
+#'         0.002363499, 0.002428126, 0.002292457, 0.002117078,
+#'         0.002154659, 0.002004334, 0.002079497, 0.001897374,
+#'         0.002216401, 0.001863792, 0.002182820, 0.001847001,
+#'         0.001897374)
+#'
+#' # fit the model
+#' res <- mig_estimate_rc(ages = ages, mx = mx,
+#'                        pre_working_age = TRUE,
+#'                        working_age = TRUE,
+#'                        retirement = TRUE,
+#'                        post_retirement = FALSE,
+#'                        #optional inputs into stan
+#'                        control = list(adapt_delta = 0.95, max_treedepth = 10),
+#'                        iter = 10, chains = 1 #to speed up example
+#'                        )
+#'
 mig_estimate_rc <- function(ages,
                             migrants,
                             pop,
+                            mx,
                             pre_working_age,
                             working_age,
                             retirement,
@@ -88,38 +125,75 @@ mig_estimate_rc <- function(ages,
   if(!missing(net_mig)) stop("Argument net_mig deprecated, use migrants instead.")
 
   if(missing(ages)) stop("ages is missing")
-  if(missing(migrants)) stop("migrants is missing")
-  if(missing(pop)) stop("pop is missing")
 
-  if(length(ages)!=length(migrants) | length(migrants)!=length(pop))
-    stop("length of arguments ages, migrants and pop must be equal")
-  if ( !all(migrants == floor(migrants)) ) stop("migrants must comprise of integers")
-  if (sum(migrants > pop)>0) stop("must have migrants <= pop")
+  if(!missing(migrants) & !missing(pop)) {
 
-  # data for model input
-  x <- ages
-  pop <- pop
-  y <- migrants
+    run_poisson = 1
+    message("mig_estimate_rc is running poisson model, Using arguments ages, migrants, and pop")
+    if(length(ages)!=length(migrants) | length(migrants)!=length(pop))
+      stop("length of arguments ages, migrants and pop must be equal")
+    if ( !all(migrants == floor(migrants)) ) stop("migrants must be integers")
+    if (sum(migrants > pop)>0) stop("must have migrants <= pop")
 
-  mig_data <- list(
-    N = length(x),
-    y = y,
-    x = x,
-    pop = pop,
-    pre_working_age = as.numeric(pre_working_age), #binary
-    working_age = as.numeric(working_age),
-    retirement = as.numeric(retirement),
-    post_retirement = as.numeric(post_retirement)
-  )
+  } else if (!missing(mx)) {
 
-  # fit the model
-  rc_fit <- rstan::sampling(stanmodels$rcmodel, data = mig_data, ...)
-  #rc_fit <- rstan::stan(model_code = rc_flexible, data = mig_data, ...)
+    run_poisson = 0
+    message("mig_estimate_rc is running normal model, Using arguments ages and mx")
+    if(length(ages)!=length(mx))
+      stop("length of arguments ages and mx must be equal")
+    if (sum(mx<0) > 0) stop("mx must be non-negative")
+
+  } else {
+
+    stop("mig_estimate_rc requires either data for migrants and pop, or data for mx")
+
+  }
+
+  # organize data for model input and fit the model
+  if (run_poisson == 1) {
+    x <- ages
+    pop <- pop
+    y <- migrants
+
+    mig_data <- list(
+      N = length(x),
+      y = y,
+      x = x,
+      pop = pop,
+      pre_working_age = as.numeric(pre_working_age), #binary
+      working_age = as.numeric(working_age),
+      retirement = as.numeric(retirement),
+      post_retirement = as.numeric(post_retirement)
+    )
+
+    rc_fit <- rstan::sampling(stanmodels$rcmodel_poisson, data = mig_data, ...)
+
+  } else if (run_poisson == 0){
+    x <- ages
+    y <- mx
+
+    mig_data <- list(
+      N = length(x),
+      y = y,
+      x = x,
+      pre_working_age = as.numeric(pre_working_age), #binary
+      working_age = as.numeric(working_age),
+      retirement = as.numeric(retirement),
+      post_retirement = as.numeric(post_retirement)
+    )
+
+    rc_fit <- rstan::sampling(stanmodels$rcmodel_normal, data = mig_data, ...)
+
+  } else {
+    stop("Require either data for migrants and pop, or data for mx")
+  }
+
 
   # extract the posterior samples
   list_of_draws <- rstan::extract(rc_fit)
 
   # create a matrix to store fitted values
+  if (run_poisson == 1) {mx = y/pop}
   y_hat      <- matrix(nrow = length(list_of_draws[[1]]), ncol = length(x))
   these_pars <- list()
   parnames   <- names(list_of_draws)[grep("alpha|a[0-9]|mu[0-9]|lambda|^c$",names(list_of_draws))]
@@ -131,7 +205,7 @@ mig_estimate_rc <- function(ages,
   }
 
   dfit <- tibble(age = x,
-                 data = y/pop, median = apply(y_hat, 2, median),
+                 data = mx, median = apply(y_hat, 2, median),
                  lower = apply(y_hat, 2, quantile,0.025),
                  upper = apply(y_hat, 2, quantile, 0.975),
                  diff_sq = (!!sym("median") - !!sym("data"))^2)
