@@ -113,7 +113,7 @@ Note, however, that all parameters within a particular component family must be 
 
 #### Overview
 
-The `mig_estimate_rc` function returns estimated Rogers-Castro parameters and $m(x)$ values, based on observed age-specific migrants, age-specific population sizes, an age range, and the Rogers-Castro components to be included in the model. The function has the capability of estimating a Rogers-Castro age schedule with any combination of the components `pre_working_age`, `working_age`, `retirement` and `post_retirement`. These are specified as logicals (either `TRUE` or `FALSE`) in the function.
+The `mig_estimate_rc` function returns estimated Rogers-Castro parameters and $m(x)$ values, based on observed age-specific migration data  and the Rogers-Castro components to be included in the model. The function has the capability of estimating a Rogers-Castro age schedule with any combination of the components `pre_working_age`, `working_age`, `retirement` and `post_retirement`. These are specified as logicals (either `TRUE` or `FALSE`) in the function.
 
 As illustrated above, Rogers-Castro migration age schedules are highly non-linear, as so are not necessarily straight forward to estimate. Previous approaches have used, for example, Excel's Solver function or the `optim` function in `R`.[^1] However, the estimated parameters and schedules are highly sensitive to the initial values chosen for the parameter values, and convergence is difficult to achieve for the 11 and 13 parameter models.
 
@@ -130,7 +130,7 @@ The following arguments are required for the `mig_estimate_rc` function:
     + `migrants` and `pop` to provide data on the number of age-specific migrants and age-specific population OR
     + `mx` to provide data on age-specific migration rates
 
-That is, users have an option to input their data as counts or as rates. Depending on which one is used, a slightly different model will be run. If use provides data as counts using `migrants` and `pop`, a Poisson model will be applied. If the user provides data as rates, a Normal model will be applied. 
+That is, users have an option to input their data as counts or as rates. Depending on which one is used, a slightly different model will be run. If the user provides data as counts using `migrants` and `pop`, a Poisson model will be applied. If the user provides data as rates, a Normal model will be applied. 
 
 #### Example: Estimating migration rates for population with large retirement peak
 
@@ -175,12 +175,11 @@ rc_res <- mig_estimate_rc(
   iter = 2000,
   control = list(adapt_delta = 0.8, max_treedepth = 10)
 )
-rc_res[['check_converge']]
-rc_res[['pars_df']]
-rc_res[['fit_df']]
 ```
 
 The `mig_estimate_rc` function also allows for addition arguments that are related to the Stan model. In the example above, the values listed for `chains`, `iter`, `adapt_delta` and `max_treedepth` are the default values, so need have not been specified. However, depending on the context, it may make sense to increase the value of each of these components to ensure convergence. More details about these arguments can be found in the `R` help files for `rstan::stan`, and also by referring to the [Stan documentation](https://mc-stan.org/users/documentation/).
+
+As mentioned above, this example's data is in the form of count data. In the case that your data is in the form of migration rates, swap out the `migrants` and `pop` arguments for `mx`. 
 
 ##### Checking Model Diagnostics
 When fitting models in a Bayesian framework using MCMC, as in the case of `mig_estimate_rc`, one cannot simply run the model and use the results without further inspection. It is always necessary to assess the model results to ensure that the model has converged. In Bayesian models, convergence would imply that the model has converged to a particular target distribution, which is a necessary condition before you move on and use the model's results. 

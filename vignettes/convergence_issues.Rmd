@@ -33,7 +33,7 @@ The output of `mig_estimate_rc` allows you to easily check two diagnostic values
 
 * The **Effective sample size** provides insight into the autocorrelation among samples in the same chain. The larger the effective sample size the better. If your effective sample size is small, you should consider increasing the number of MCMC samples.
 
-The rest of this document focuses on dealing with convergence issues, which will likely be reflected as large R-hat values. It is not uncommon to find that your model has not converged. This is particularly true if you are fitting a the Poisson model with a large total population size and/or you are fitting either the 11 or 13 parameter models. Resolving a non-convergent model is not always straight-forward, but we will explain some strategies that can be used with `mig_estimate_rc`. 
+The rest of this document focuses on dealing with convergence issues, which will likely be reflected as large R-hat values. It is not uncommon to find that your model has not converged. This is particularly true if you are fitting a the Poisson model (i.e., providing count data) with a large total population size and/or you are fitting either the 11 or 13 parameter models. Resolving a non-convergent model is not always straight-forward, but we will explain some strategies that can be used with `mig_estimate_rc`. 
 
 ## Example of a Non-Convergent Model
 
