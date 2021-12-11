@@ -22,7 +22,7 @@ mig_estimate_rc(
 
 \item{migrants}{numeric. A vector of integers for observed age-specific migrants.}
 
-\item{pop}{numeric. A vector of integers for age-specific population.}
+\item{pop}{numeric. A vector of integers for age-specific population or sample sizes, of which "migrants" experienced a migration event.}
 
 \item{mx}{numeric. A vector of age-specific migration rates.}
 

@@ -5,7 +5,7 @@
 
 #' @param ages numeric. A vector of integers for ages.
 #' @param migrants numeric. A vector of integers for observed age-specific migrants.
-#' @param pop numeric. A vector of integers for age-specific population.
+#' @param pop numeric. A vector of integers for age-specific population or sample sizes, of which "migrants" experienced a migration event.
 #' @param mx numeric. A vector of age-specific migration rates.
 #' @param pre_working_age logical (TRUE/FALSE). Whether or not to include pre working age component.
 #' @param working_age logical (TRUE/FALSE). Whether or not to include working age component.
