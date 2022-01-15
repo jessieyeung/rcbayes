@@ -7,6 +7,7 @@
 #' @param migrants numeric. A vector of integers for observed age-specific migrants.
 #' @param pop numeric. A vector of integers for age-specific population or sample sizes, of which "migrants" experienced a migration event.
 #' @param mx numeric. A vector of age-specific migration rates.
+#' @param sigma numeric. Standard deviation of migration rates for Normal model. Argument is option, standard deviation is estimated if Normal model is run without being specified.
 #' @param pre_working_age logical (TRUE/FALSE). Whether or not to include pre working age component.
 #' @param working_age logical (TRUE/FALSE). Whether or not to include working age component.
 #' @param retirement logical (TRUE/FALSE). Whether or not to include retirement age component.
@@ -113,6 +114,7 @@ mig_estimate_rc <- function(ages,
                             migrants,
                             pop,
                             mx,
+                            sigma,
                             pre_working_age,
                             working_age,
                             retirement,
@@ -122,9 +124,16 @@ mig_estimate_rc <- function(ages,
 
   # initial checks
   stopifnot(any(pre_working_age, working_age, retirement, post_retirement))
-  if(!missing(net_mig)) stop("Argument net_mig deprecated, use migrants instead.")
+  if(!missing(net_mig)){
+    warning("argument net_mig is deprecated; please use migrants instead.", call. = FALSE)
+    migrants <- net_mig
+  }
 
   if(missing(ages)) stop("ages is missing")
+
+  run_poisson = 0
+  run_normal_sigma_given = 0
+  run_normal_sigma_estimated = 0
 
   if(!missing(migrants) & !missing(pop)) {
 
@@ -134,14 +143,30 @@ mig_estimate_rc <- function(ages,
       stop("length of arguments ages, migrants and pop must be equal")
     if ( !all(migrants == floor(migrants)) ) stop("migrants must be integers")
     if (sum(migrants > pop)>0) stop("must have migrants <= pop")
+    if (!missing(mx) & !missing(sigma))
+      warning("arguments mx and sigma are ignored")
 
-  } else if (!missing(mx)) {
+  } else if (!missing(mx) & !missing(sigma)) {
 
-    run_poisson = 0
+    run_normal_sigma_given = 1
+    message("mig_estimate_rc is running normal model, Using arguments ages, mx, and sigma")
+    if(length(ages)!=length(mx))
+      stop("length of arguments ages and mx must be equal")
+    if (sum(mx<0) > 0) stop("mx must be non-negative")
+    if (length(sigma) != 1) stop("sigma must have length 1")
+    if (sigma <= 0) stop("sigma must be positive")
+    if (!missing(migrants) & !missing(pop))
+      warning("arguments migrants and pop are ignored")
+
+  } else if (!missing(mx) ) {
+
+    run_normal_sigma_estimated = 1
     message("mig_estimate_rc is running normal model, Using arguments ages and mx")
     if(length(ages)!=length(mx))
       stop("length of arguments ages and mx must be equal")
     if (sum(mx<0) > 0) stop("mx must be non-negative")
+    if (!missing(migrants) & !missing(pop))
+      warning("arguments migrants and pop are ignored")
 
   } else {
 
@@ -168,7 +193,7 @@ mig_estimate_rc <- function(ages,
 
     rc_fit <- rstan::sampling(stanmodels$rcmodel_poisson, data = mig_data, ...)
 
-  } else if (run_poisson == 0){
+  } else if (run_normal_sigma_estimated == 1){
     x <- ages
     y <- mx
 
@@ -183,6 +208,23 @@ mig_estimate_rc <- function(ages,
     )
 
     rc_fit <- rstan::sampling(stanmodels$rcmodel_normal, data = mig_data, ...)
+
+  } else if (run_normal_sigma_given == 1){
+    x <- ages
+    y <- mx
+
+    mig_data <- list(
+      N = length(x),
+      y = y,
+      x = x,
+      sigma = sigma,
+      pre_working_age = as.numeric(pre_working_age), #binary
+      working_age = as.numeric(working_age),
+      retirement = as.numeric(retirement),
+      post_retirement = as.numeric(post_retirement)
+    )
+
+    rc_fit <- rstan::sampling(stanmodels$rcmodel_normal_sigma_given, data = mig_data, ...)
 
   } else {
     stop("Require either data for migrants and pop, or data for mx")

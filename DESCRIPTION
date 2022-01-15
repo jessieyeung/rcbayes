@@ -1,8 +1,8 @@
 Package: rcbayes
 Title: Estimate Rogers-Castro Migration Age Schedules with Bayesian Models
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(
-    person("Jessie", "Yeung", role = c("aut", "cre"), email = "jessieyeung1@gmail.com",),
+    person("Jessie", "Yeung", role = c("aut", "cre"), email = "jessieyeung1@gmail.com", comment = c(ORCID = "0000-0002-0319-6892")),
     person("Monica", "Alexander", role = "aut", comment = c(ORCID = "0000-0002-8135-3435")),
     person("Tim", "Riffe", role = c("aut"), comment = c(ORCID = "0000-0002-2673-4622")))
 Description: A collection of functions to estimate Rogers-Castro migration age schedules using 'Stan'. This model which describes the fundamental relationship between migration and age in the form of a flexible multi-exponential migration model was most notably proposed in Rogers and Castro (1978) <doi:10.1068/a100475>.

@@ -130,7 +130,15 @@ The following arguments are required for the `mig_estimate_rc` function:
     + `migrants` and `pop` to provide data on the number of age-specific migrants and age-specific population OR
     + `mx` to provide data on age-specific migration rates
 
-That is, users have an option to input their data as counts or as rates. Depending on which one is used, a slightly different model will be run. If the user provides data as counts using `migrants` and `pop`, a Poisson model will be applied. If the user provides data as rates, a Normal model will be applied. 
+That is, users have an option to input their data as counts or as rates. Depending on which one is used, a different model will be run. If the user provides data as counts using `migrants` and `pop`, a Poisson model will be applied. If the user provides data as rates, a Normal model will be applied. 
+
+When running `mig_estimate_rc`, a message will appear informing the user of which model is run. 
+
+##### Optional Inputs for `mig_estimate_rc`
+
+In the case that the Normal model is used (i.e., the user inputs age-specific migration rates using the argument `mx`), the user can use the optional argument `sigma` to input the standard deviation for the normal model. If this optional input is not used, the value of `sigma` is estimated. 
+
+Regardless of which model is used, any additional arguments for `mig_estimate_rc` will be additional inputs to `rstan::stan()`. 
 
 #### Example: Estimating migration rates for population with large retirement peak
 
