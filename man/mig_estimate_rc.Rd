@@ -9,6 +9,7 @@ mig_estimate_rc(
   migrants,
   pop,
   mx,
+  sigma,
   pre_working_age,
   working_age,
   retirement,
@@ -25,6 +26,8 @@ mig_estimate_rc(
 \item{pop}{numeric. A vector of integers for age-specific population or sample sizes, of which "migrants" experienced a migration event.}
 
 \item{mx}{numeric. A vector of age-specific migration rates.}
+
+\item{sigma}{numeric. Standard deviation of migration rates for Normal model. Argument is option, standard deviation is estimated if Normal model is run without being specified.}
 
 \item{pre_working_age}{logical (TRUE/FALSE). Whether or not to include pre working age component.}
 

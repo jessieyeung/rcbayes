@@ -1,16 +1,3 @@
-## Resubmission
-This is a resubmission. In this version I have:
-
-* Added references describing the methods in the package in the description field of the DESCRIPTION file
-
-* Written package names, software names and API names in single quotes in title and description
-
-* Added \value to .Rd files
-
-* Removed some uses of \dontrun{}. Ensured that \dontrun{} is only used if the example really cannot be executed. 
-
-* Fixed incorrect DOI
-
 ## Test environments
 * local R installation, R 4.1.1
 * Fedora Linux, R-devel, clang, gfortran (via rhub)
@@ -19,9 +6,7 @@ This is a resubmission. In this version I have:
 
 ## R CMD check results
 
-0 errors | 0 warnings | 4 notes
-
-* This is a new release.
+0 errors | 0 warnings | 3 notes
 
 * checking dependencies in R code ... NOTE
   Namespaces in Imports field not imported from:
@@ -30,9 +15,9 @@ This is a resubmission. In this version I have:
   'RcppParallel' and 'rstantools' are a build-time dependencies.
   
 * checking installed package size ... NOTE
-  installed size is 49.1Mb
+  installed size is 6.0Mb
   sub-directories of 1Mb or more:
-    libs  48.4Mb
+    libs  5.3Mb
     
   The libs subdirectory is then above the 1MB threshold. My understanding is that this inflation of the libs subdirectory is due to the use of 'Rcpp'. The use of 'Rcpp' is necessary due to the use of rstan, as at its core, 'rcbayes' is a package that implements 'Stan' models.  
   

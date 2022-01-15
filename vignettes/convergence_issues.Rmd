@@ -1,5 +1,5 @@
 ---
-title: "Achieving Model Convergence With mig_estimate_rc"
+title: "Model Convergence With mig_estimate_rc"
 author: "Monica Alexander, Jessie Yeung, Tim Riffe"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -221,6 +221,8 @@ In particular, the `init_rc` function will crudely estimate particular parameter
 * The `a` parameters describe the heights of peaks. The function uses the local maximums within specific age ranges. 
 * The `mu` parameters describe the age at which peaks occur. The function uses the ages associated with local maximums described above. 
 * The `c` parameter describes the overall migration level. The function uses the minimum observed migration rate. 
+
+It is important that the user runs `init_rc` and `mig_estimate_rc` with the same data, included components, and number of chains. Otherwise, `mig_estimate_rc` will not run. 
 
 ## Example: Fixing a Non-Convergent Model
 

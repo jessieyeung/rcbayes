@@ -8,9 +8,8 @@ The
 package is an R package that contains functions to calculate and
 estimate Rogers-Castro migration age schedules in a Bayesian framework.
 
-`rcbayes` version 0.1.0 is now available on
-[CRAN](https://cran.r-project.org/web/packages/rcbayes/index.html)
-(commit 53da0c8).
+`rcbayes` version 0.2.0 is now available on
+[CRAN](https://cran.r-project.org/web/packages/rcbayes/index.html).
 
 `rcbayes` is a spin-off package that is called on by
 [`DemoTools`](https://github.com/timriffe/DemoTools/), but can also be
@@ -50,7 +49,7 @@ general Google search.
 ## Model Convergence
 
 For additional tips in getting models to converge, we recommend taking a
-look at the vignette [Achieving Model Convergence With
+look at the vignette [Model Convergence With
 mig\_estimate\_rc](https://cran.r-project.org/web/packages/rcbayes/vignettes/convergence_issues.html).
 
 ## Citation

@@ -3,3 +3,6 @@
 .RData
 example.R
 inst/doc
+revdep/library.noindex
+revdep/checks.noindex
+revdep/data.sqlite
