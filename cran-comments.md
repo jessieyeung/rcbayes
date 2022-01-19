@@ -1,3 +1,8 @@
+## Resubmission
+This is a resubmission. In this version I have:
+
+* Changed invalid URLs to the canonical URL of the CRAN page for this package
+
 ## Test environments
 * local R installation, R 4.1.1
 * Fedora Linux, R-devel, clang, gfortran (via rhub)
