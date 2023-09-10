@@ -5,22 +5,22 @@ data {
   int<lower=0,upper=1> post_retirement;         // 0 = no, 1 = yes
   int<lower=0> N;
   vector[N] x;                                  //ages
-  int<lower=0> y[N];                            //age-specific migrants
+  array[N] int<lower=0> y;                            //age-specific migrants
   vector[N] pop;                                //age-specific population size
 }
 parameters {
-  real<lower=0> alpha1[1*pre_working_age];
-  real<lower=0> alpha2[1*working_age];
-  real<lower=0> alpha3[1*retirement];
-  real<lower=0, upper=1> a1[1*pre_working_age];
-  real<lower=0, upper=1> a2[1*working_age];
-  real<lower=0, upper=1> a3[1*retirement];
-  real<lower=0, upper=1> a4[1*post_retirement];
-  real<lower=0> mu2[1*working_age];
-  real<lower=0, upper=max(x)> mu3[1*retirement];
-  real<lower=0> lambda2[1*working_age];
-  real<lower=0> lambda3[1*retirement];
-  real<upper=0.05> lambda4[1*post_retirement];
+  array[1*pre_working_age] real<lower=0> alpha1;
+  array[1*working_age] real<lower=0> alpha2;
+  array[1*retirement] real<lower=0> alpha3;
+  array[1*pre_working_age] real<lower=0, upper=1> a1;
+  array[1*working_age] real<lower=0, upper=1> a2;
+  array[1*retirement] real<lower=0, upper=1> a3;
+  array[1*post_retirement] real<lower=0, upper=1> a4;
+  array[1*working_age] real<lower=0> mu2;
+  array[1*retirement] real<lower=0, upper=max(x)> mu3;
+  array[1*working_age] real<lower=0> lambda2;
+  array[1*retirement] real<lower=0> lambda3;
+  array[1*post_retirement] real<upper=0.05> lambda4;
   real<lower=0, upper=1> c;
 }
 transformed parameters {
