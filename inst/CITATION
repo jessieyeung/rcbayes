@@ -1,0 +1,12 @@
+
+bibentry(bibtype = "article",
+ header="To cite rcbayes in publications, please use:",
+         author = c(
+           person("Jessie", "Yeung", role = c("aut", "cre"), email = "jessieyeung1@gmail.com", comment = c(ORCID = "0000-0002-0319-6892")),
+           person("Monica", "Alexander", role = "aut", comment = c(ORCID = "0000-0002-8135-3435")),
+           person("Tim", "Riffe", role = c("aut"), comment = c(ORCID = "0000-0002-2673-4622"))),
+         doi = "https://doi.org/10.4054/DemRes.2023.49.42",
+         journal = "Demographic Research",
+         title = "Bayesian implementation of Rogers–Castro model migration schedules: An alternative technique for parameter estimation",
+         year = 2023,
+         volume = 49)
