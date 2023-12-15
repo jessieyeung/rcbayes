@@ -6,21 +6,28 @@
 \usage{
 mig_estimate_rc(
   ages,
-  net_mig,
+  migrants,
   pop,
+  mx,
+  sigma,
   pre_working_age,
   working_age,
   retirement,
   post_retirement,
+  net_mig,
   ...
 )
 }
 \arguments{
 \item{ages}{numeric. A vector of integers for ages.}
 
-\item{net_mig}{numeric. A vector of integers for observed age-specific net migrants.}
+\item{migrants}{numeric. A vector of integers for observed age-specific migrants.}
 
-\item{pop}{numeric. A vector of integers for age-specific population.}
+\item{pop}{numeric. A vector of integers for age-specific population or sample sizes, of which "migrants" experienced a migration event.}
+
+\item{mx}{numeric. A vector of age-specific migration rates.}
+
+\item{sigma}{numeric. Standard deviation of migration rates for Normal model. Argument is option, standard deviation is estimated if Normal model is run without being specified.}
 
 \item{pre_working_age}{logical (TRUE/FALSE). Whether or not to include pre working age component.}
 
@@ -30,16 +37,23 @@ mig_estimate_rc(
 
 \item{post_retirement}{logical (TRUE/FALSE). Whether or not to include post retirement age component.}
 
+\item{net_mig}{numeric. Deprecated argument, use migrants instead.}
+
 \item{...}{additional inputs to stan, see ?rstan::stan for details.}
 }
+\value{
+A list of length 3. The first element, \code{pars_df}, is a data frame that provides parameter estimates with 95\% credible intervals.
+The second element, \code{fit_df}, is a data frame that shows the data and estimated migration rates at each age.
+The third element, \code{check_converge}, is a data frame that provides the R-hat values and effective sample sizes.
+}
 \description{
-Given a set of ages and observed age-specific net migrants, estimate the parameters of a Roger-Castro model migration schedule.
+Given a set of ages and observed age-specific migrants, estimate the parameters of a Roger-Castro model migration schedule.
 Choose between a 7, 9, 11 or 13 parameter model.
 }
 \examples{
-# define ages, net migrants, and population
+# Ex 1: Run poisson model using ages, migrants, and population
 ages <- 0:80
-net_mig <- c(202,215,167,188,206,189,164,
+migrants <- c(202,215,167,188,206,189,164,
             158,197,185,176,173,167,198,
             203,237,249,274,319,345,487,
             491,521,505,529,527,521,529,
@@ -68,20 +82,55 @@ pop <- c(105505,105505,105505,105505,105505,
         79827,79827,79827,79827,79827,59556,
         59556,59556,59556,59556,59556)
 
-# fit the model
 
-res <- mig_estimate_rc(ages, net_mig, pop,
+# fit the model
+res <- mig_estimate_rc(ages = ages, migrants = migrants, pop = pop,
                        pre_working_age = TRUE,
                        working_age = TRUE,
                        retirement = TRUE,
                        post_retirement = FALSE,
                        #optional inputs into stan
-                       control = list(adapt_delta = 0.95, max_treedepth = 10)
+                       control = list(adapt_delta = 0.95, max_treedepth = 10),
+                       iter = 10, chains = 1 #to speed up example
                        )
-\dontrun{
 # plot the results and data
-plot(ages, net_mig/pop, ylab = "migration rate", xlab = "age")
+plot(ages, migrants/pop, ylab = "migration rate", xlab = "age")
 lines(ages, res[["fit_df"]]$median, col = "red")
 legend("topright", legend=c("data", "fit"), col=c("black", "red"), lty=1, pch = 1)
-}
+
+# Ex 2: Run normal model using ages and mx
+ages <- 0:80
+mx <- c(0.001914601, 0.002037818, 0.001582863, 0.001781906,
+        0.001952514, 0.001780902, 0.001545333, 0.001488796,
+        0.001856284, 0.001743211, 0.001758172, 0.001728203,
+        0.001668265, 0.001977943, 0.002027891, 0.002063022,
+        0.002167479, 0.002385097, 0.002776811, 0.003003134,
+        0.003558771, 0.003588001, 0.003807227, 0.003690307,
+        0.003865687, 0.003858488, 0.003814558, 0.003873131,
+        0.003712056, 0.003543659, 0.003290238, 0.003092965,
+        0.002811146, 0.002811146, 0.002677282, 0.002744282,
+        0.002311759, 0.002416161, 0.002155156, 0.002177528,
+        0.002064710, 0.002057062, 0.002179416, 0.001942356,
+        0.001873533, 0.001981783, 0.001921955, 0.001929434,
+        0.001966826, 0.001892041, 0.002244159, 0.001900401,
+        0.002153355, 0.002244159, 0.002263617, 0.002441776,
+        0.002655001, 0.002379872, 0.002366115, 0.002421141,
+        0.002621367, 0.002534252, 0.002431298, 0.002534252,
+        0.002455057, 0.002381964, 0.002345034, 0.002243477,
+        0.002363499, 0.002428126, 0.002292457, 0.002117078,
+        0.002154659, 0.002004334, 0.002079497, 0.001897374,
+        0.002216401, 0.001863792, 0.002182820, 0.001847001,
+        0.001897374)
+
+# fit the model
+res <- mig_estimate_rc(ages = ages, mx = mx,
+                       pre_working_age = TRUE,
+                       working_age = TRUE,
+                       retirement = TRUE,
+                       post_retirement = FALSE,
+                       #optional inputs into stan
+                       control = list(adapt_delta = 0.95, max_treedepth = 10),
+                       iter = 10, chains = 1 #to speed up example
+                       )
+
 }

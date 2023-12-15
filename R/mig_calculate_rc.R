@@ -5,6 +5,8 @@
 #' @param ages numeric. A vector of ages for migration rates to be calculated.
 #' @param pars numeric. A named list of parameters. See below for details.
 #'
+#' @return A vector the same length as \code{ages}. Values represent migration rate for each age in \code{ages}.
+#'
 #' @export
 #'
 #' @details In the full 13 parameter model, the migration rate at age x, \eqn{m(x)} is defined as
@@ -30,9 +32,9 @@
 #' alpha3= 1, mu3= 67, lambda3= 0.6, c= 0.01)
 #' ages <- 0:75
 #' mx <- mig_calculate_rc(ages = ages, pars = pars)
-#' \dontrun{
+#'
 #' plot(ages, mx, type = 'l')
-#'}
+#'
 mig_calculate_rc <- function(ages,
                              pars){
 

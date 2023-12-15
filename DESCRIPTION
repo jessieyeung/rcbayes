@@ -1,29 +1,45 @@
 Package: rcbayes
-Title: Estimate Rogers-Castro migration age schedules with Bayesian models
-Version: 0.0.0.9000
+Title: Estimate Rogers-Castro Migration Age Schedules with Bayesian Models
+Version: 0.2.0
 Authors@R: c(
-    person("Jessie", "Yeung", role = c("aut", "cre"), email = "jessieyeung1@gmail.com",),
-    person("Monica", "Alexander", role = "aut", comment = c(ORCID = "0000-0002-8135-3435")))
-Description: A collection of functions to estimate Rogers-Castro migration age schedules using Stan. 
+    person("Jessie", "Yeung", role = c("aut", "cre"), email = "jessieyeung1@gmail.com", comment = c(ORCID = "0000-0002-0319-6892")),
+    person("Monica", "Alexander", role = "aut", comment = c(ORCID = "0000-0002-8135-3435")),
+    person("Tim", "Riffe", role = c("aut"), comment = c(ORCID = "0000-0002-2673-4622")))
+Description: A collection of functions to estimate Rogers-Castro migration age schedules using 'Stan'. This model which describes the fundamental relationship between migration and age in the form of a flexible multi-exponential migration model was most notably proposed in Rogers and Castro (1978) <doi:10.1068/a100475>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
+Biarch: true
+Depends: 
+    R (>= 3.4.0)
 Imports: 
+    methods,
+    Rcpp (>= 0.12.0),
+    RcppParallel (>= 5.0.1),
+    rstan (>= 2.18.1),
+    rstantools (>= 2.1.1),
     Rdpack,
-    rstan,
-    Rcpp,
-    stats,
     dplyr,
     rlang,
+    stats,
     tibble,
     tidybayes,
     magrittr,
-    shiny
-RdMacros: Rdpack
+    shiny,
+    shinythemes
+LinkingTo: 
+    BH (>= 1.66.0),
+    Rcpp (>= 0.12.0),
+    RcppEigen (>= 0.3.3.3.0),
+    RcppParallel (>= 5.0.1),
+    rstan (>= 2.18.1),
+    StanHeaders (>= 2.18.0)
 Suggests: 
     knitr,
     rmarkdown,
     ggplot2
+SystemRequirements: GNU make
 VignetteBuilder: knitr
+RdMacros: Rdpack
