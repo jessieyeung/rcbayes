@@ -1,5 +1,4 @@
 library(shiny)
-library(DemoTools)
 library(dplyr)
 library(ggplot2)
 library(shinythemes)
@@ -7,38 +6,38 @@ library(shinythemes)
 ui <- fluidPage(
   theme = shinytheme("simplex"),
   #shinythemes::themeSelector(),
-  
+
   #Set Slider Colours
   tags$style(HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar {background: firebrick}")),
   tags$style(HTML(".js-irs-1 .irs-single, .js-irs-1 .irs-bar-edge, .js-irs-1 .irs-bar {background: firebrick}")),
-  
+
   tags$style(HTML(".js-irs-2 .irs-single, .js-irs-2 .irs-bar-edge, .js-irs-2 .irs-bar {background: steelblue}")),
   tags$style(HTML(".js-irs-3 .irs-single, .js-irs-3 .irs-bar-edge, .js-irs-3 .irs-bar {background: steelblue}")),
   tags$style(HTML(".js-irs-4 .irs-single, .js-irs-4 .irs-bar-edge, .js-irs-4 .irs-bar {background: steelblue}")),
   tags$style(HTML(".js-irs-5 .irs-single, .js-irs-5 .irs-bar-edge, .js-irs-5 .irs-bar {background: steelblue}")),
-  
-  
+
+
   tags$style(HTML(".js-irs-6 .irs-single, .js-irs-6 .irs-bar-edge, .js-irs-6 .irs-bar {background: forestgreen}")),
   tags$style(HTML(".js-irs-7 .irs-single, .js-irs-7 .irs-bar-edge, .js-irs-7 .irs-bar {background: forestgreen}")),
   tags$style(HTML(".js-irs-8 .irs-single, .js-irs-8 .irs-bar-edge, .js-irs-8 .irs-bar {background: forestgreen}")),
   tags$style(HTML(".js-irs-9 .irs-single, .js-irs-9 .irs-bar-edge, .js-irs-9 .irs-bar {background: forestgreen}")),
-  
+
   tags$style(HTML(".js-irs-10 .irs-single, .js-irs-10 .irs-bar-edge, .js-irs-10 .irs-bar {background: orange}")),
   tags$style(HTML(".js-irs-11 .irs-single, .js-irs-11 .irs-bar-edge, .js-irs-11 .irs-bar {background: orange}")),
-  
+
   tags$style(HTML(".js-irs-12 .irs-single, .js-irs-12 .irs-bar-edge, .js-irs-12 .irs-bar {background: black}")),
   tags$style(HTML(".js-irs-13 .irs-single, .js-irs-13 .irs-bar-edge, .js-irs-13 .irs-bar {background: firebrick}")),
-  
+
   tags$head(tags$style(
     type = 'text/css',
     'form.well { max-height: 750px; overflow-y: auto;}'
   )),
-  
+
   titlePanel("Rogers-Castro Migration Schedules"),
-  
+
   sidebarLayout(
     sidebarPanel(
-      
+
       #PRE-WORKING AGE INPUTS
       h1(id="heading1", "Pre-Working Age"),
       tags$style(HTML("#heading1{font-size: 20px;}")),
@@ -89,7 +88,7 @@ ui <- fluidPage(
                                    value = 0.4)
       ),
       hr(),
-      
+
       #RETIREMENT AGE
       h1(id="heading3", "Retirement Age"),
       tags$style(HTML("#heading3{font-size: 20px;}")),
@@ -102,19 +101,19 @@ ui <- fluidPage(
                                    min = 0,
                                    max = 1,
                                    value = 0.02),
-                       
+
                        sliderInput(inputId = "alpha3",
                                    label = HTML("&alpha;<sub>3</sub> for shape of component:"),
                                    min = 0,
                                    max = 1,
                                    value = 0.25),
-                       
+
                        sliderInput(inputId = "mu3",
                                    label = HTML("&mu;<sub>3</sub> for age of retirement peak:"),
                                    min = 0,
                                    max = 100,
                                    value = 67),
-                       
+
                        sliderInput(inputId = "lambda3",
                                    label = HTML("&lambda;<sub>3</sub> for shape of component:"),
                                    min = 0,
@@ -122,7 +121,7 @@ ui <- fluidPage(
                                    value = 0.6)
       ),
       hr(),
-      
+
       #POST-RETIREMENT AGE
       h1(id="heading4", "Post-Retirement Age"),
       tags$style(HTML("#heading4{font-size: 20px;}")),
@@ -135,7 +134,7 @@ ui <- fluidPage(
                   min = 0,
                   max = 1,
                   value = 0.01),
-      
+
       sliderInput(inputId = "lambda4",
                   label = HTML("&lambda;<sub>4</sub> for shape of component:"),
                   min = -0.1,
@@ -143,7 +142,7 @@ ui <- fluidPage(
                   value = 0)
       ),
       hr(),
-      
+
       #OVERALL
       h1(id="heading5", "Overall Migration Level"),
       tags$style(HTML("#heading5{font-size: 20px;}")),
@@ -152,9 +151,9 @@ ui <- fluidPage(
                   min = 0,
                   max = 1,
                   value = 0.01),
-      
+
       hr(),
-      
+
       #MAX AGE
       h1(id="heading6", "Maximum Age"),
       tags$style(HTML("#heading6{font-size: 20px;}")),
@@ -163,29 +162,29 @@ ui <- fluidPage(
                   min = 80,
                   max = 120,
                   value = 100)
-      
+
     ),
-    
+
     # Main panel for displaying outputs ----
     mainPanel(
-      
+
       # Output: Histogram ----
       plotOutput(outputId = "distPlot")
-      
+
     )
   )
 )
 
 server <- function(input, output) {
-  
+
   output$distPlot <- renderPlot({
-    
+
     npars = 1
     a1= input$a1; alpha1= input$alpha1
     a2= input$a2; alpha2= input$alpha2; mu2= input$mu2; lambda2= input$lambda2
     a3= input$a3; alpha3= input$alpha3; mu3= input$mu3; lambda3= input$lambda3
     a4= input$a4; lambda4 = input$lambda4
-  
+
     if (input$pre_working_box){
       npars = npars + 2
     } else {
@@ -206,27 +205,27 @@ server <- function(input, output) {
     } else {
       a4=0; lambda4=0
     }
-    
+
     pars <- c(a1=a1, alpha1=alpha1,
               a2=a2, alpha2=alpha2, mu2=mu2, lambda2=lambda2,
               a3=a3, alpha3=alpha3, mu3=mu3, lambda3=lambda3,
               a4=a4, lambda4 =lambda4,
               c=input$c)
-    
+
     ages <- 0:input$max_age
     mx <- mig_calculate_rc(ages = ages, pars = pars)
-    
+
     df <- tibble(age = ages, mx = mx)
     df %>%
       ggplot(aes(age, mx)) +
       geom_line(color="steelblue", size=1.5) +
-      ggtitle(paste0(npars, "-Parameter Model")) + 
+      ggtitle(paste0(npars, "-Parameter Model")) +
       theme_minimal() +
       theme(text=element_text(size=16)) +
       xlab("Age") + ylab("Migration Rate (mx)")
-    
+
   })
-  
+
 }
 
 
