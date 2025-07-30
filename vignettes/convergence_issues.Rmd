@@ -105,7 +105,7 @@ rc_res[['check_converge']] <- matrix(
                   c("mean", "se_mean", "n_eff", "Rhat")),
   byrow = TRUE)
 
-rc_res[['fit_df']] <- tibble(ages = 0:80,
+rc_res[['fit_df']] <- tibble(age = 0:80,
        data = migrants/pop,
        median = c(0.11107413, 0.10207562, 0.09392648, 0.08667344, 0.08025095, 0.07451119, 
                   0.06935217, 0.06473068, 0.06059616, 0.05690437, 0.05363063, 0.05073012, 
@@ -162,9 +162,9 @@ We see that there are many R-hat values that are very large and thus the model h
 
 ```{r, fig.width=6}
 rc_res[["fit_df"]] %>%
-  ggplot(aes(ages, data)) +
+  ggplot(aes(age, data)) +
   geom_point(aes(color = "data")) +
-  geom_line(aes(x = ages, y = median, color = "fit")) +
+  geom_line(aes(x = age, y = median, color = "fit")) +
   geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
   scale_color_manual(name = "", values = c(data = "red", fit = "black")) +
   ylab("migration rate")
@@ -274,7 +274,7 @@ rc_res_fixed[['check_converge']] <- matrix(
                   c("mean", "se_mean", "n_eff", "Rhat")),
   byrow = TRUE)
 
-rc_res_fixed[['fit_df']] <- tibble(ages = 0:80,
+rc_res_fixed[['fit_df']] <- tibble(age = 0:80,
        data = migrants/pop,
        median = c(0.11066577, 0.10183467, 0.09389724, 0.08677859, 0.08039617, 0.07466633,
                   0.06952911, 0.06491991, 0.06079010, 0.05708701, 0.05377364, 0.05079940, 
@@ -331,9 +331,9 @@ We can now plot and interpret the model results.
 
 ```{r, fig.width=6}
 rc_res_fixed[["fit_df"]] %>%
-  ggplot(aes(ages, data)) +
+  ggplot(aes(age, data)) +
   geom_point(aes(color = "data")) +
-  geom_line(aes(x = ages, y = median, color = "fit")) +
+  geom_line(aes(x = age, y = median, color = "fit")) +
   geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
   scale_color_manual(name = "", values = c(data = "red", fit = "black")) +
   ylab("migration rate")

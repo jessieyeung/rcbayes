@@ -229,7 +229,7 @@ rc_res[['pars_df']] <- tibble(variable = c("a1","a2","a3","alpha1","alpha2","alp
        upper = c(0.01106290,  0.06797684,  0.02883773,  2.25796406,  0.23777804,  0.35320899,  0.02185859,
                  0.16919224,  0.19132286, 26.91274982, 66.84958398))
 
-rc_res[['fit_df']] <- tibble(ages = 0:80,
+rc_res[['fit_df']] <- tibble(age = 0:80,
        data = fl_migrants/fl_pop,
        median = c(0.02445917, 0.02212957, 0.02123731, 0.02083668, 0.02063243, 0.02050311, 0.02042182, 
                   0.02038452, 0.02039545, 0.02048247, 0.02069491, 0.02113354, 0.02188968, 0.02309565, 
@@ -307,9 +307,9 @@ rc_res[['fit_df']]
 We can plot the observed data and estimated fit using the `fit_df` object:
 ```{r}
 rc_res[["fit_df"]] %>%
-  ggplot(aes(ages, data)) +
+  ggplot(aes(age, data)) +
   geom_point(aes(color = "data")) +
-  geom_line(aes(x = ages, y = median, color = "fit")) +
+  geom_line(aes(x = age, y = median, color = "fit")) +
   geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
   scale_color_manual(name = "", values = c(data = "red", fit = "black")) +
   ylab("migration rate")
