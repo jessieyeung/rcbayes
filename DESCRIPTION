@@ -1,6 +1,6 @@
 Package: rcbayes
 Title: Estimate Rogers-Castro Migration Age Schedules with Bayesian Models
-Version: 0.2.0
+Version: 0.3.0
 Authors@R: c(
     person("Jessie", "Yeung", role = c("aut", "cre"), email = "jessieyeung1@gmail.com", comment = c(ORCID = "0000-0002-0319-6892")),
     person("Monica", "Alexander", role = "aut", comment = c(ORCID = "0000-0002-8135-3435")),
