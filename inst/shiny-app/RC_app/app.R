@@ -218,7 +218,7 @@ server <- function(input, output) {
     df <- tibble(age = ages, mx = mx)
     df %>%
       ggplot(aes(age, mx)) +
-      geom_line(color="steelblue", size=1.5) +
+      geom_line(color="steelblue", linewidth=1.5) +
       ggtitle(paste0(npars, "-Parameter Model")) +
       theme_minimal() +
       theme(text=element_text(size=16)) +
