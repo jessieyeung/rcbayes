@@ -6,8 +6,20 @@
 \alias{rcbayes}
 \title{The 'rcbayes' package.}
 \description{
+A collection of functions to estimate Rogers-Castro migration age schedules using 'Stan'. This model which describes the fundamental relationship between migration and age in the form of a flexible multi-exponential migration model was most notably proposed in Rogers and Castro (1978) \doi{10.1068/a100475}.
+
 A DESCRIPTION OF THE PACKAGE
 }
 \references{
 Stan Development Team (2020). RStan: the R interface to Stan. R package version 2.21.2. https://mc-stan.org
+}
+\author{
+\strong{Maintainer}: Jessie Yeung \email{jessieyeung1@gmail.com} (\href{https://orcid.org/0000-0002-0319-6892}{ORCID})
+
+Authors:
+\itemize{
+  \item Monica Alexander (\href{https://orcid.org/0000-0002-8135-3435}{ORCID})
+  \item Tim Riffe (\href{https://orcid.org/0000-0002-2673-4622}{ORCID})
+}
+
 }

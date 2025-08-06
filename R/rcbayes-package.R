@@ -1,8 +1,9 @@
 #' The 'rcbayes' package.
+#' @aliases rcbayes-package
+"_PACKAGE"
 #'
 #' @description A DESCRIPTION OF THE PACKAGE
 #'
-#' @docType package
 #' @name rcbayes-package
 #' @aliases rcbayes
 #' @useDynLib rcbayes, .registration = TRUE
