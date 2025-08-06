@@ -1,3 +1,10 @@
+# rcbayes 0.3.0
+
+Notable changes 
+
+  - Poisson model now uses poisson_log in stan code for numerical stability
+  - Updated deprecated syntax for future rstan compatibility
+
 # rcbayes 0.2.0
 
 Notable changes 

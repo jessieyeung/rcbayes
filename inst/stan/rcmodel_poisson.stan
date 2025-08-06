@@ -47,10 +47,10 @@ model {
   vector[N] log_lambda;
 
   for (i in 1:N){
-    log_lambda[i] = mu_rc[i] + pop[i];
-  }
+     log_lambda[i] = log(mu_rc[i]) + log(pop[i]);
+   }
 
-  y ~ poisson(mu_rc .* pop);
+  y ~ poisson_log(log_lambda);
 
   //priors
 
