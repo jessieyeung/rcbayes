@@ -4,12 +4,12 @@
 Date: 2021-01-30
 
 The
-[`rcbayes`](https://CRAN.R-project.org/package=rcbayes)
+[`rcbayes`](https://cran.r-project.org/web/packages/rcbayes/index.html)
 package is an R package that contains functions to calculate and
 estimate Rogers-Castro migration age schedules in a Bayesian framework.
 
 `rcbayes` version 0.3.0 is now available on
-[CRAN](https://CRAN.R-project.org/package=rcbayes).
+[CRAN](https://cran.r-project.org/web/packages/rcbayes/index.html).
 
 `rcbayes` is a spin-off package that is called on by
 [`DemoTools`](https://github.com/timriffe/DemoTools/), but can also be
@@ -18,11 +18,11 @@ simple functions often used in demographic analysis.
 
 This project, including both the `rcbayes` and `DemoTools` packages, is
 commissioned by the [UN Population
-Division](https://www.un.org/en/development/desa/population/) and
+Division](http://www.un.org/en/development/desa/population/) and
 financed by the [Bill and Melinda Gates
 Foundation](https://www.gatesfoundation.org/) as part of the [Making
 Family Planning
-Count](https://www.un.org/en/development/desa/population/projects/making-family-planning-count/index.shtml)
+Count](http://www.un.org/en/development/desa/population/projects/making-family-planning-count/index.shtml)
 project. `rcbayes` was created in collaboration with [Monica
 Alexander](https://www.monicaalexander.com/) and [Tim
 Riffe](https://github.com/timriffe/). This work is licensed under the
@@ -32,7 +32,7 @@ MIT License.
 
 To get started with `rcbayes` we recommend taking a look at the vignette
 [Rogers Castro Migration Models with
-rcbayes](https://cran.r-project.org/package=rcbayes/vignettes/intro_to_rcbayes.html).
+rcbayes](https://cran.r-project.org/web/packages/rcbayes/vignettes/intro_to_rcbayes.html).
 
 You can load the `rcbayes` package as follows:
 
@@ -50,7 +50,7 @@ general Google search.
 
 For additional tips in getting models to converge, we recommend taking a
 look at the vignette [Model Convergence With
-mig_estimate_rc](https://cran.r-project.org/package=rcbayes/vignettes/convergence_issues.html).
+mig_estimate_rc](https://cran.r-project.org/web/packages/rcbayes/vignettes/convergence_issues.html).
 
 ## Citation
 
